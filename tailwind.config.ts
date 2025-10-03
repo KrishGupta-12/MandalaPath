@@ -8,10 +8,17 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['"PT Sans"', 'sans-serif'],
+        headline: ['"Playfair Display"', 'serif'],
         code: ['monospace'],
       },
       colors: {
@@ -88,10 +95,15 @@ export default {
             height: '0',
           },
         },
+        'mandala-glow': {
+          '0%, 100%': { boxShadow: '0 0 20px 5px hsl(var(--primary)), 0 0 30px 10px hsl(var(--accent))' },
+          '50%': { boxShadow: '0 0 40px 15px hsl(var(--primary)), 0 0 60px 20px hsl(var(--accent))' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'mandala-glow': 'mandala-glow 2s ease-in-out infinite',
       },
     },
   },
