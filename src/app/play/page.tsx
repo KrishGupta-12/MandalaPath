@@ -35,15 +35,13 @@ export default function PlayPage() {
     if (!isLoadingProgress) {
         if (userProgress) {
             setCurrentLevel(userProgress.level);
-        } else {
+        } else if (userProgressRef && mandalaId) {
             // If no progress document exists, create it for Level 1
-            if(userProgressRef) {
-                setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
-            }
+            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
             setCurrentLevel(1);
         }
     }
-  }, [userProgress, isLoadingProgress, userProgressRef, mandalaId, router]);
+  }, [userProgress, isLoadingProgress, userProgressRef, mandalaId]);
 
 
   const mandalaLevel: MandalaLevel | null = useMemo(() => {
@@ -73,10 +71,11 @@ export default function PlayPage() {
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Optimistically update level for immediate re-render
        } else {
-            // After completing the final level, reset to level 1 for replayability
+            // After completing the final level (9), reset to level 1 for replayability
             setDocumentNonBlocking(userProgressRef, { level: 1 }, { merge: true });
-            // Let the dialog show, then on close it will be reset. We can set the local level to 1 after a delay.
-            setTimeout(() => setCurrentLevel(1), 2000); 
+            // Show the final dialog, then optimistically update the local level to 1.
+            // A small delay can prevent a jarring UI jump before the dialog closes.
+            setTimeout(() => setCurrentLevel(1), 500); 
        }
   };
 
@@ -93,7 +92,7 @@ export default function PlayPage() {
     }
   }, [mandalaId, router]);
 
-  if (isUserLoading || !user || isLoadingProgress || !mandalaLevel || !mandalaConfig) {
+  if (isUserLoading || !user || isLoadingProgress || !mandalaLevel || !mandalaConfig || currentLevel === null) {
     return (
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-center">
