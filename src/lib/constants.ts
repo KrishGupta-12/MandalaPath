@@ -8,11 +8,10 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 3,
     segments: 8,
-    // The goal is to align the 'swastika' symbol, which is at index 3 and 7. 
-    // We'll set the solution to 0 for all rings, and the puzzle is solved when all rings are at rotation 0.
-    // The visual logic is that the swastika symbol is at the top.
+    // The goal is to align the 'swastika' symbol.
+    // The visual logic is that the swastika symbol is at the halfway point of the segments.
     solution: [0, 0, 0], 
-    symbols: ['fire', 'phoenix', 'fire', 'swastika', 'fire', 'phoenix', 'fire', 'logo'],
+    symbols: ['fire', 'phoenix', 'fire', 'logo', 'swastika', 'phoenix', 'fire', 'logo'],
   },
   {
     id: 'jala',
@@ -22,7 +21,7 @@ export const MANDALAS: Mandala[] = [
     rings: 4,
     segments: 8,
     solution: [0, 0, 0, 0],
-    symbols: ['water', 'garuda', 'water', 'swastika', 'water', 'garuda', 'water', 'logo'],
+    symbols: ['water', 'garuda', 'water', 'logo', 'swastika', 'garuda', 'water', 'logo'],
   },
   {
     id: 'prithvi',
@@ -32,7 +31,7 @@ export const MANDALAS: Mandala[] = [
     rings: 5,
     segments: 12,
     solution: [0, 0, 0, 0, 0],
-    symbols: ['earth', 'logo', 'earth', 'logo', 'earth', 'swastika', 'earth', 'logo', 'earth', 'logo', 'earth', 'logo'],
+    symbols: ['earth', 'logo', 'earth', 'logo', 'earth', 'logo', 'swastika', 'logo', 'earth', 'logo', 'earth', 'logo'],
   },
   {
     id: 'vayu',
@@ -42,7 +41,7 @@ export const MANDALAS: Mandala[] = [
     rings: 5,
     segments: 12,
     solution: [0, 0, 0, 0, 0],
-    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'swastika', 'air', 'phoenix', 'air', 'garuda', 'air', 'logo'],
+    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'logo', 'swastika', 'phoenix', 'air', 'garuda', 'air', 'logo'],
   },
    {
     id: 'akasha',
@@ -52,12 +51,6 @@ export const MANDALAS: Mandala[] = [
     rings: 6,
     segments: 12,
     solution: [0,0,0,0,0,0],
-    symbols: ['logo', 'swastika', 'logo', 'phoenix', 'logo', 'garuda', 'logo', 'swastika', 'logo', 'phoenix', 'logo', 'garuda'],
+    symbols: ['logo', 'phoenix', 'logo', 'garuda', 'logo', 'swastika', 'logo', 'phoenix', 'logo', 'garuda', 'logo', 'swastika'],
   }
 ];
-
-export const LEADERBOARD_DATA: { global: any[], friends: any[] } = {
-    global: [
-    ],
-    friends: [],
-}
