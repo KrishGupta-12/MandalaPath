@@ -117,17 +117,13 @@
           "type": "string",
           "description": "Reference to MandalaPuzzle. (Relationship: MandalaPuzzle 1:N LeaderboardEntry)"
         },
-        "completionTime": {
+        "score": {
           "type": "number",
-          "description": "Completion time in seconds."
-        },
-        "movesUsed": {
-          "type": "number",
-          "description": "Number of moves used to solve the puzzle."
+          "description": "The player's score in the Cosmic Recall game."
         },
         "timestamp": {
           "type": "string",
-          "description": "Timestamp of when the puzzle was completed.",
+          "description": "Timestamp of when the score was achieved.",
           "format": "date-time"
         }
       },
@@ -135,8 +131,7 @@
         "id",
         "userId",
         "mandalaId",
-        "completionTime",
-        "movesUsed",
+        "score",
         "timestamp"
       ]
     }

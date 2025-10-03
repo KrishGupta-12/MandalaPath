@@ -24,15 +24,14 @@ export interface LeaderboardEntry {
     id: string;
     userId: string;
     mandalaId: string;
-    completionTime: number;
-    movesUsed: number;
+    score: number; // Changed from completionTime
     timestamp: any; // Firestore timestamp
 }
 
 export interface LeaderboardPlayer {
   rank: number;
   name: string;
-  time: string;
-  moves: number;
+  score: number;
   avatar: string;
+  userId: string;
 }

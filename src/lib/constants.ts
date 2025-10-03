@@ -9,7 +9,7 @@ export const MANDALAS: Mandala[] = [
     rings: 3,
     segments: 8,
     solution: [0, 4, 0],
-    symbols: ['fire', 'phoenix', 'fire'],
+    symbols: ['fire', 'phoenix', 'fire', 'swastika', 'fire', 'phoenix', 'fire', 'swastika'],
   },
   {
     id: 'jala',
@@ -19,7 +19,7 @@ export const MANDALAS: Mandala[] = [
     rings: 4,
     segments: 8,
     solution: [2, 6, 2, 6],
-    symbols: ['water', 'garuda', 'water', 'garuda'],
+    symbols: ['water', 'garuda', 'water', 'logo', 'water', 'garuda', 'water', 'logo'],
   },
   {
     id: 'prithvi',
@@ -29,7 +29,7 @@ export const MANDALAS: Mandala[] = [
     rings: 5,
     segments: 12,
     solution: [0, 3, 6, 9, 0],
-    symbols: ['earth', 'logo', 'earth', 'logo', 'earth'],
+    symbols: ['earth', 'logo', 'earth', 'logo', 'earth', 'swastika', 'earth', 'logo', 'earth', 'logo', 'earth', 'swastika'],
   },
   {
     id: 'vayu',
@@ -39,7 +39,7 @@ export const MANDALAS: Mandala[] = [
     rings: 5,
     segments: 12,
     solution: [5, 10, 3, 8, 1],
-    symbols: ['air', 'phoenix', 'air', 'garuda', 'air'],
+    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'logo', 'air', 'phoenix', 'air', 'garuda', 'air', 'logo'],
   },
    {
     id: 'akasha',
@@ -49,17 +49,12 @@ export const MANDALAS: Mandala[] = [
     rings: 6,
     segments: 12,
     solution: [0, 2, 4, 6, 8, 10],
-    symbols: ['logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika'],
+    symbols: ['logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika'],
   }
 ];
 
-export const LEADERBOARD_DATA: { global: LeaderboardPlayer[], friends: LeaderboardPlayer[] } = {
+export const LEADERBOARD_DATA: { global: any[], friends: any[] } = {
     global: [
-      { rank: 1, name: 'Enlightened Master', time: '0:32', moves: 5, avatar: 'https://picsum.photos/seed/1/40/40' },
-      { rank: 2, name: 'Cosmic-Traveler', time: '0:45', moves: 8, avatar: 'https://picsum.photos/seed/2/40/40' },
-      { rank: 3, name: 'Aether-Mind', time: '0:51', moves: 11, avatar: 'https://picsum.photos/seed/3/40/40' },
-      { rank: 4, name: 'Guest User', time: '1:12', moves: 15, avatar: 'https://picsum.photos/seed/4/40/40' },
-      { rank: 5, name: 'Chakra-Spinner', time: '1:25', moves: 20, avatar: 'https://picsum.photos/seed/5/40/40' },
     ],
     friends: [],
 }

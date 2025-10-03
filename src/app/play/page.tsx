@@ -1,5 +1,5 @@
 'use client';
-import { PuzzleBoard } from '@/components/game/puzzle-board';
+import { CosmicRecall } from '@/components/game/cosmic-recall';
 import { useUser } from '@/firebase';
 import { Mandala } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
@@ -31,7 +31,6 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!isLoadingMandala && !mandala) {
-      // Handle case where mandala is not found after loading
       router.push('/dashboard');
     }
   }, [mandala, isLoadingMandala, router]);
@@ -40,7 +39,7 @@ export default function PlayPage() {
     return (
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-center">
-          <p>Loading Puzzle...</p>
+          <p>Loading Game...</p>
         </div>
       </div>
     );
@@ -57,10 +56,10 @@ export default function PlayPage() {
             </Button>
         </div>
       <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-2">
-        {mandala.name}
+        {mandala.name} - Cosmic Recall
       </h1>
-      <p className="text-foreground/80 mb-8 max-w-lg text-center">Rotate the rings to align the sacred symbols at the top. Find your center and bring balance to the pattern.</p>
-      <PuzzleBoard mandala={mandala} />
+      <p className="text-foreground/80 mb-8 max-w-lg text-center">Observe the sequence of sacred symbols, then repeat the pattern. How long can your memory flow?</p>
+      <CosmicRecall mandala={mandala} />
     </div>
   );
 }
