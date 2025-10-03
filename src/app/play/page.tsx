@@ -32,12 +32,15 @@ export default function PlayPage() {
   const [currentLevel, setCurrentLevel] = useState<number | null>(null);
 
   useEffect(() => {
+    // This effect now correctly handles setting the level based on loaded data.
     if (!isLoadingProgress) {
         if (userProgress) {
+            // Progress exists, use the level from Firestore.
             setCurrentLevel(userProgress.level);
         } else if (userProgressRef && mandalaId) {
-            // If no progress document exists, create it for Level 1
-            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
+            // No progress document exists for this user and mandala, so create it for Level 1.
+            // This is the correct entry point for a new player or a new mandala.
+            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId });
             setCurrentLevel(1);
         }
     }
@@ -64,17 +67,18 @@ export default function PlayPage() {
 
   const handlePuzzleSolved = async () => {
       if (!user || !mandalaId || !userProgressRef || !currentLevel || !mandalaConfig) return;
+      
       const nextLevel = currentLevel + 1;
       const totalLevels = 9;
        
        if (nextLevel <= totalLevels) {
+            // User progresses to the next level.
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Optimistically update level for immediate re-render
        } else {
-            // After completing the final level (9), reset to level 1 for replayability
+            // After completing the final level (9), reset to level 1 for replayability.
             setDocumentNonBlocking(userProgressRef, { level: 1 }, { merge: true });
-            // Show the final dialog, then optimistically update the local level to 1.
-            // A small delay can prevent a jarring UI jump before the dialog closes.
+            // Show the final dialog, then optimistically update the local level to 1 after a short delay.
             setTimeout(() => setCurrentLevel(1), 500); 
        }
   };
