@@ -8,7 +8,7 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 3,
     segments: 8,
-    solution: [0, 0, 0],
+    solution: [0, 4, 0],
     symbols: ['fire', 'phoenix', 'fire'],
   },
   {
@@ -18,7 +18,7 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 4,
     segments: 8,
-    solution: [0, 0, 0, 0],
+    solution: [2, 6, 2, 6],
     symbols: ['water', 'garuda', 'water', 'garuda'],
   },
   {
@@ -28,7 +28,7 @@ export const MANDALAS: Mandala[] = [
     unlocked: false,
     rings: 5,
     segments: 12,
-    solution: [0, 0, 0, 0, 0],
+    solution: [0, 3, 6, 9, 0],
     symbols: ['earth', 'logo', 'earth', 'logo', 'earth'],
   },
   {
@@ -38,7 +38,7 @@ export const MANDALAS: Mandala[] = [
     unlocked: false,
     rings: 5,
     segments: 12,
-    solution: [0, 0, 0, 0, 0],
+    solution: [5, 10, 3, 8, 1],
     symbols: ['air', 'phoenix', 'air', 'garuda', 'air'],
   },
 ];

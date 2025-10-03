@@ -12,8 +12,22 @@ interface PuzzleBoardProps {
   mandala: Mandala;
 }
 
+// Function to generate a random, non-solved initial state
+const createInitialState = (rings: number, segments: number, solution: number[]): number[] => {
+    let initialState: number[];
+    let isSolved: boolean;
+
+    do {
+        initialState = Array.from({ length: rings }, () => Math.floor(Math.random() * segments));
+        isSolved = initialState.every((rot, i) => rot === solution[i]);
+    } while (isSolved); // Keep generating until it's not the solution
+
+    return initialState;
+};
+
+
 export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
-  const [rotations, setRotations] = useState<number[]>(() => Array(mandala.rings).fill(0));
+  const [rotations, setRotations] = useState<number[]>(() => createInitialState(mandala.rings, mandala.segments, mandala.solution));
   const [isSolved, setIsSolved] = useState(false);
   const [isInsightOpen, setIsInsightOpen] = useState(false);
   const [moves, setMoves] = useState(0);
@@ -94,7 +108,7 @@ export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
                         transform: `rotate(${rotations[actualRingIndex] * segmentAngle}deg)`,
                     }}
                     onClick={() => handleRotate(actualRingIndex, 'cw')}
-                    onContextMenu={(e) => { e.preventDefault(); handleRotate(actualRingIndex, 'ccw'); }}
+                    onContextMenu={(e) => { e.preventDefault(); handleRotate(actualRingİndex, 'ccw'); }}
                 >
                 {Array.from({ length: mandala.segments }).map((_, segmentIndex) => (
                   <div
