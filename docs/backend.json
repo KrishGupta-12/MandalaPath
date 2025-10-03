@@ -1,0 +1,219 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile within the Mandala Path application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile."
+        },
+        "googleId": {
+          "type": "string",
+          "description": "The user's Google ID, obtained from Firebase Authentication."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User's display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL of the user's profile photo, if available.",
+          "format": "uri"
+        },
+        "unlockedMandalaIds": {
+          "type": "array",
+          "description": "References to unlocked Mandala puzzles.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "googleId",
+        "email",
+        "displayName"
+      ]
+    },
+    "MandalaPuzzle": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MandalaPuzzle",
+      "type": "object",
+      "description": "Represents a Mandala puzzle with its configuration and associated cultural insights.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the mandala puzzle."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name or title of the mandala puzzle."
+        },
+        "configuration": {
+          "type": "string",
+          "description": "The target configuration of the mandala puzzle, stored as a string representation (e.g., JSON or other encoded format)."
+        },
+        "culturalInsightId": {
+          "type": "string",
+          "description": "Reference to CulturalInsight. (Relationship: MandalaPuzzle 1:1 CulturalInsight)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "configuration"
+      ]
+    },
+    "CulturalInsight": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CulturalInsight",
+      "type": "object",
+      "description": "Represents a cultural insight (Sanskrit shloka or cultural fact) associated with a solved Mandala puzzle.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the cultural insight."
+        },
+        "shloka": {
+          "type": "string",
+          "description": "Sanskrit shloka text."
+        },
+        "englishMeaning": {
+          "type": "string",
+          "description": "English translation/meaning of the shloka."
+        },
+        "culturalFact": {
+          "type": "string",
+          "description": "A cultural fact related to the mandala or its symbolism."
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "LeaderboardEntry": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "LeaderboardEntry",
+      "type": "object",
+      "description": "Represents an entry in the leaderboard, tracking user's performance on a Mandala puzzle.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the leaderboard entry."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N LeaderboardEntry)"
+        },
+        "mandalaId": {
+          "type": "string",
+          "description": "Reference to MandalaPuzzle. (Relationship: MandalaPuzzle 1:N LeaderboardEntry)"
+        },
+        "completionTime": {
+          "type": "number",
+          "description": "Completion time in seconds."
+        },
+        "movesUsed": {
+          "type": "number",
+          "description": "Number of moves used to solve the puzzle."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the puzzle was completed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "mandalaId",
+        "completionTime",
+        "movesUsed",
+        "timestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile data. Uses path-based ownership for security. Only the user with the matching userId can read/write their profile.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user, matching the Firebase Auth UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/mandalaPuzzles/{mandalaId}",
+        "definition": {
+          "entityName": "MandalaPuzzle",
+          "schema": {
+            "$ref": "#/backend/entities/MandalaPuzzle"
+          },
+          "description": "Stores the data for each Mandala puzzle.",
+          "params": [
+            {
+              "name": "mandalaId",
+              "description": "The unique identifier for the Mandala puzzle."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/culturalInsights/{culturalInsightId}",
+        "definition": {
+          "entityName": "CulturalInsight",
+          "schema": {
+            "$ref": "#/backend/entities/CulturalInsight"
+          },
+          "description": "Stores cultural insights (shlokas, meanings, facts) associated with solved Mandala puzzles.",
+          "params": [
+            {
+              "name": "culturalInsightId",
+              "description": "The unique identifier for the cultural insight."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/leaderboardEntries/{leaderboardEntryId}",
+        "definition": {
+          "entityName": "LeaderboardEntry",
+          "schema": {
+            "$ref": "#/backend/entities/LeaderboardEntry"
+          },
+          "description": "Stores leaderboard entries for Mandala puzzle completions.",
+          "params": [
+            {
+              "name": "leaderboardEntryId",
+              "description": "The unique identifier for the leaderboard entry."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the Mandala Path application's features, focusing on user profiles, mandala puzzles, cultural insights, and leaderboard functionality. It prioritizes authorization independence, clarity, and scalability.  The structure uses path-based ownership for user-specific data and denormalization where needed for authorization. User profiles are stored under `/users/{userId}`. Mandala puzzles and cultural insights are stored in top-level collections, allowing easy querying and access. Leaderboard entries are stored under a top-level collection. Authorization Independence is achieved through path-based ownership for user data and top-level collections with security rules based on `request.auth.uid` or public access where appropriate, avoiding `get()` calls in rules. This approach supports atomic operations and simplifies debugging. QAPs are supported using structural segregation. User-specific data is stored under `/users/{userId}`, ensuring only the user can `list` their own data. The public mandala puzzles and cultural insights can be listed without authentication, while leaderboard entries can be listed with appropriate security rules to prevent unauthorized access or modification."
+  }
+}
