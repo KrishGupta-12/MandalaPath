@@ -3,9 +3,9 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, BookOpen, Puzzle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Icons } from '@/components/shared/icons';
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-mandala');
   const explanationImage = PlaceHolderImages.find((img) => img.id === 'app-explanation');
 
   return (
@@ -31,17 +31,8 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-          <div className="relative aspect-square max-w-md mx-auto w-full">
-            {heroImage && (
-              <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                priority
-                className="object-contain animate-spin-slow"
-                data-ai-hint={heroImage.imageHint}
-              />
-            )}
+          <div className="relative aspect-square max-w-md mx-auto w-full flex items-center justify-center">
+            <Icons.logo className="w-full h-full text-primary animate-spin-slow" />
              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent rounded-full"></div>
           </div>
         </div>

@@ -1,12 +1,6 @@
 {
   "placeholderImages": [
     {
-      "id": "hero-mandala",
-      "description": "An intricate, golden Om symbol glowing with divine light.",
-      "imageUrl": "https://www.transparentpng.com/thumb/om/golden-om-symbol-png-image-7.png",
-      "imageHint": "om symbol"
-    },
-    {
       "id": "app-explanation",
       "description": "A majestic Hindu temple gopuram reaching towards the sky.",
       "imageUrl": "https://njmonthly.com/wp-content/uploads/cache/2014/11/F2_BAPS-Swaminarayan-Akshardham/3752341911.jpg",
