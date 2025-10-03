@@ -12,62 +12,99 @@
  * - Cultural insights are stored in the top-level collection `/culturalInsights/{culturalInsightId}`.
  *
  * Key Security Decisions:
- * - User listing is disallowed.
- * - Public read access is granted for mandala puzzles and cultural insights.
- * - User data is strictly controlled via path-based ownership.
- * - No data validation is performed beyond authorization checks (prototyping mode).
+ * - Users can only read and write their own profile data and mandala progress.
+ * - Listing user profiles is disallowed.
+ * - Mandala puzzles and cultural insights are publicly readable.
+ * - Write access to mandala puzzles and cultural insights is denied.
+ *
+ * Denormalization for Authorization:
+ * - User ownership is enforced using path-based rules (e.g., `/users/{userId}`).
+ *   The `userId` parameter in the path must match the authenticated user's UID.
+ *   This avoids the need for `get()` calls to verify ownership.
+ *
+ * Structural Segregation:
+ * - User-specific data (profiles and progress) is stored under the `/users/{userId}` path,
+ *   while public data (puzzles and insights) is stored in top-level collections.
+ *   This segregation simplifies security rules and improves query performance.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Secure user profiles. Only the user can read/write their own profile.
+     * @description Allows users to read and write their own profile data.
      * @path /users/{userId}
-     * @allow (create) User with UID 'user123' creates their profile at /users/user123.
-     * @allow (get) User with UID 'user123' reads their profile at /users/user123.
-     * @allow (update) User with UID 'user123' updates their profile at /users/user123.
-     * @allow (delete) User with UID 'user123' deletes their profile at /users/user123.
-     * @deny (create) User with UID 'user456' attempts to create a profile at /users/user123.
-     * @deny (get) User with UID 'user456' attempts to read the profile at /users/user123.
+     * @allow (create) User with uid 'user123' can create their profile with matching uid.
+     *   request.resource.data: { "uid": "user123", "email": "test@example.com", "displayName": "Test User" }
+     * @allow (get) User with uid 'user123' can read their profile.
+     * @allow (update) User with uid 'user123' can update their profile.
+     * @allow (delete) User with uid 'user123' can delete their profile.
+     * @deny (create) User with uid 'user123' cannot create a profile with a mismatched uid 'user456'.
+     *   request.resource.data: { "uid": "user456", "email": "test@example.com", "displayName": "Test User" }
+     * @deny (get) User with uid 'user456' cannot read the profile of user 'user123'.
      * @principle Enforces document ownership for writes.
      */
     match /users/{userId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
       allow get: if isOwner(userId);
-      allow list: if false; // User listing is not allowed.
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow list: if false; // Listing users is not permitted.
+      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.uid == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.uid == userId;
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Secure user mandala progress. Only the user can read/write their own progress.
+     * @description Allows users to read and write their own mandala progress data.
      * @path /users/{userId}/mandalaProgress/{mandalaId}
-     * @allow (create) User with UID 'user123' creates progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
-     * @allow (get) User with UID 'user123' reads progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
-     * @allow (update) User with UID 'user123' updates progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
-     * @allow (delete) User with UID 'user123' deletes progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
-     * @deny (create) User with UID 'user456' attempts to create progress at /users/user123/mandalaProgress/agni.
-     * @deny (get) User with UID 'user456' attempts to read progress at /users/user123/mandalaProgress/agni.
-     * @principle Enforces document ownership for writes within a user's data tree.
+     * @allow (create) User with uid 'user123' can create their mandala progress with matching userId.
+     *   request.resource.data: { "id": "agni", "level": 1 }
+     * @allow (get) User with uid 'user123' can read their mandala progress.
+     * @allow (update) User with uid 'user123' can update their mandala progress.
+     * @allow (delete) User with uid 'user123' can delete their mandala progress.
+     * @deny (create) User with uid 'user123' cannot create mandala progress for another user.
+     * @deny (get) User with uid 'user456' cannot read the mandala progress of user 'user123'.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId}/mandalaProgress/{mandalaId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
       allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId);
+      allow list: if false;
+      allow create: if isSignedIn() && isOwner(userId);
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Allow public read access to mandala puzzles, but no writes.
+     * @description Allows public read access to mandala puzzle data.  Write access is denied.
      * @path /mandalaPuzzles/{mandalaId}
      * @allow (get) Any user can read a mandala puzzle.
      * @allow (list) Any user can list mandala puzzles.
      * @deny (create) No one can create mandala puzzles through the client.
      * @deny (update) No one can update mandala puzzles through the client.
      * @deny (delete) No one can delete mandala puzzles through the client.
-     * @principle Allows public read access while restricting writes.
+     * @principle Allows public read access with owner-only writes (currently no owner).
      */
     match /mandalaPuzzles/{mandalaId} {
       allow get: if true;
@@ -78,14 +115,14 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allow public read access to cultural insights, but no writes.
+     * @description Allows public read access to cultural insight data. Write access is denied.
      * @path /culturalInsights/{culturalInsightId}
      * @allow (get) Any user can read a cultural insight.
      * @allow (list) Any user can list cultural insights.
      * @deny (create) No one can create cultural insights through the client.
      * @deny (update) No one can update cultural insights through the client.
      * @deny (delete) No one can delete cultural insights through the client.
-     * @principle Allows public read access while restricting writes.
+     * @principle Allows public read access with owner-only writes (currently no owner).
      */
     match /culturalInsights/{culturalInsightId} {
       allow get: if true;
@@ -94,20 +131,5 @@ service cloud.firestore {
       allow update: if false;
       allow delete: if false;
     }
-  }
-
-  // Helper function to determine if the request is made by the owner.
-  function isOwner(userId) {
-    return isSignedIn() && request.auth.uid == userId;
-  }
-
-    // Helper function to determine if the request is made by an existing owner.
-  function isExistingOwner(userId) {
-    return isOwner(userId) && resource != null;
-  }
-
-  // Helper function to determine if the user is signed in.
-  function isSignedIn() {
-    return request.auth != null;
   }
 }
