@@ -133,7 +133,7 @@ export default function Home() {
       <section className="py-16 sm:py-24 bg-background">
         <div className="container mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-12">Meet the Founder</h2>
-            <Card className="max-w-sm mx-auto text-left shadow-lg">
+            <Card className="max-w-md mx-auto text-left shadow-lg">
                 <CardContent className="p-6 flex flex-col items-center text-center">
                    {founderAvatar && (
                      <Avatar className="w-24 h-24 mb-4 border-4 border-primary/20">
@@ -142,6 +142,7 @@ export default function Home() {
                     </Avatar>
                    )}
                     <h3 className="text-2xl font-headline font-bold text-primary">Krish Gupta</h3>
+                    <p className="text-foreground/80 mt-2">The visionary behind Mandala Path, Krish is a passionate developer dedicated to blending technology with cultural heritage to create meaningful experiences.</p>
                     <div className="mt-4 space-y-2 text-foreground/80">
                         <a href="mailto:krishgupta200510@gmail.com" className="flex items-center justify-center gap-2 hover:text-primary transition-colors">
                             <Mail className="w-4 h-4"/>
