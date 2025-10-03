@@ -26,7 +26,7 @@ export default function Home() {
               <span className="text-sm">- Bhagavad Gita 2.47</span>
             </blockquote>
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold group">
-              <Link href="/dashboard">
+              <Link href="/login">
                 Begin Your Journey <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
