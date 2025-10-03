@@ -1,72 +1,113 @@
+/**
+ * @fileoverview Firestore Security Rules for Mandala Path application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for user profiles and progress data,
+ * while allowing public read access to mandala puzzles and cultural insights.
+ *
+ * Data Structure:
+ * - User profiles are stored under `/users/{userId}`.
+ * - User-specific mandala progress is stored under `/users/{userId}/mandalaProgress/{mandalaId}`.
+ * - Mandala puzzles are stored in the top-level collection `/mandalaPuzzles/{mandalaId}`.
+ * - Cultural insights are stored in the top-level collection `/culturalInsights/{culturalInsightId}`.
+ *
+ * Key Security Decisions:
+ * - User listing is disallowed.
+ * - Public read access is granted for mandala puzzles and cultural insights.
+ * - User data is strictly controlled via path-based ownership.
+ * - No data validation is performed beyond authorization checks (prototyping mode).
+ */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Secure user profiles.  Only the user can read/write their profile.
+     * @description Secure user profiles. Only the user can read/write their own profile.
      * @path /users/{userId}
-     * @allow (create) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can create their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2 if the googleId matches.
-     * @allow (get) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can read their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
-     * @allow (update) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can update their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
-     * @allow (delete) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can delete their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
-     * @deny (create) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' cannot create a profile for a different user at /users/someOtherUserId.
-     * @deny (get) User 'randomId' cannot read the profile for a different user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
-     * @deny (update) User 'randomId' cannot update the profile for a different user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
-     * @deny (delete) User 'randomId' cannot delete the profile for a different user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
-     * @principle Enforces document ownership for writes, restricts access to a user's own data tree, validates relational integrity between documents.
+     * @allow (create) User with UID 'user123' creates their profile at /users/user123.
+     * @allow (get) User with UID 'user123' reads their profile at /users/user123.
+     * @allow (update) User with UID 'user123' updates their profile at /users/user123.
+     * @allow (delete) User with UID 'user123' deletes their profile at /users/user123.
+     * @deny (create) User with UID 'user456' attempts to create a profile at /users/user123.
+     * @deny (get) User with UID 'user456' attempts to read the profile at /users/user123.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId} {
-      allow read, write, create, update, delete: if request.auth.uid == userId;
-      allow list: if false;
+      allow get: if isOwner(userId);
+      allow list: if false; // User listing is not allowed.
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Secure user's mandala progress data. Only the user can read/write their own progress.
+     * @description Secure user mandala progress. Only the user can read/write their own progress.
      * @path /users/{userId}/mandalaProgress/{mandalaId}
-     * @allow (create) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can create their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @allow (get) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can read their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @allow (list) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can list their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress.
-     * @allow (update) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can update their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @allow (delete) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can delete their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @deny (create) User 'randomId' cannot create mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @deny (get) User 'randomId' cannot read mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @deny (update) User 'randomId' cannot update mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @deny (delete) User 'randomId' cannot delete mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
-     * @principle Enforces document ownership for writes and restricts access to a user's own data.
+     * @allow (create) User with UID 'user123' creates progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
+     * @allow (get) User with UID 'user123' reads progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
+     * @allow (update) User with UID 'user123' updates progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
+     * @allow (delete) User with UID 'user123' deletes progress for mandala 'agni' at /users/user123/mandalaProgress/agni.
+     * @deny (create) User with UID 'user456' attempts to create progress at /users/user123/mandalaProgress/agni.
+     * @deny (get) User with UID 'user456' attempts to read progress at /users/user123/mandalaProgress/agni.
+     * @principle Enforces document ownership for writes within a user's data tree.
      */
     match /users/{userId}/mandalaProgress/{mandalaId} {
-      allow read, write, create, update, delete: if request.auth.uid == userId;
-      allow list: if request.auth.uid == userId;
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Allow public read access to mandala puzzles.  Writes are disallowed.
+     * @description Allow public read access to mandala puzzles, but no writes.
      * @path /mandalaPuzzles/{mandalaId}
-     * @allow (get) Any user can read a mandala puzzle at /mandalaPuzzles/agni.
-     * @allow (list) Any user can list mandala puzzles at /mandalaPuzzles.
-     * @deny (create) No user can create a mandala puzzle at /mandalaPuzzles/agni.
-     * @deny (update) No user can update a mandala puzzle at /mandalaPuzzles/agni.
-     * @deny (delete) No user can delete a mandala puzzle at /mandalaPuzzles/agni.
-     * @principle Grants public read access while restricting writes.
+     * @allow (get) Any user can read a mandala puzzle.
+     * @allow (list) Any user can list mandala puzzles.
+     * @deny (create) No one can create mandala puzzles through the client.
+     * @deny (update) No one can update mandala puzzles through the client.
+     * @deny (delete) No one can delete mandala puzzles through the client.
+     * @principle Allows public read access while restricting writes.
      */
     match /mandalaPuzzles/{mandalaId} {
-      allow get, list: if true;
-      allow create, update, delete: if false;
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Allow public read access to cultural insights.  Writes are disallowed.
+     * @description Allow public read access to cultural insights, but no writes.
      * @path /culturalInsights/{culturalInsightId}
-     * @allow (get) Any user can read a cultural insight at /culturalInsights/insight1.
-     * @allow (list) Any user can list cultural insights at /culturalInsights.
-     * @deny (create) No user can create a cultural insight at /culturalInsights/insight1.
-     * @deny (update) No user can update a cultural insight at /culturalInsights/insight1.
-     * @deny (delete) No user can delete a cultural insight at /culturalInsights/insight1.
-     * @principle Grants public read access while restricting writes.
+     * @allow (get) Any user can read a cultural insight.
+     * @allow (list) Any user can list cultural insights.
+     * @deny (create) No one can create cultural insights through the client.
+     * @deny (update) No one can update cultural insights through the client.
+     * @deny (delete) No one can delete cultural insights through the client.
+     * @principle Allows public read access while restricting writes.
      */
     match /culturalInsights/{culturalInsightId} {
-      allow get, list: if true;
-      allow create, update, delete: if false;
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
+  }
+
+  // Helper function to determine if the request is made by the owner.
+  function isOwner(userId) {
+    return isSignedIn() && request.auth.uid == userId;
+  }
+
+    // Helper function to determine if the request is made by an existing owner.
+  function isExistingOwner(userId) {
+    return isOwner(userId) && resource != null;
+  }
+
+  // Helper function to determine if the user is signed in.
+  function isSignedIn() {
+    return request.auth != null;
   }
 }

@@ -1,13 +1,10 @@
 import { Icon } from '@/components/shared/icons';
 
 export interface UserProfile {
-  id: string;
-  googleId: string;
+  uid: string;
   email: string;
   displayName: string;
   photoURL?: string;
-  // This is deprecated in favor of the subcollection but kept for potential data migration.
-  unlockedMandalaIds?: string[];
 }
 
 export interface UserMandalaProgress {

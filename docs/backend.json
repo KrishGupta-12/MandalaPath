@@ -6,13 +6,9 @@
       "type": "object",
       "description": "Represents a user profile within the Mandala Path application.",
       "properties": {
-        "id": {
+        "uid": {
           "type": "string",
-          "description": "Unique identifier for the user profile."
-        },
-        "googleId": {
-          "type": "string",
-          "description": "The user's Google ID, obtained from Firebase Authentication."
+          "description": "Unique identifier for the user profile, matching Firebase Auth UID."
         },
         "email": {
           "type": "string",
@@ -30,8 +26,7 @@
         }
       },
       "required": [
-        "id",
-        "googleId",
+        "uid",
         "email",
         "displayName"
       ]
@@ -115,7 +110,7 @@
   },
   "auth": {
     "providers": [
-      "google.com"
+      "password"
     ]
   },
   "firestore": {
