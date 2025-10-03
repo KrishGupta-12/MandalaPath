@@ -1,13 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight, BookOpen, BrainCircuit, Puzzle } from 'lucide-react';
+import { ArrowRight, BookOpen, BrainCircuit, Puzzle, Mail, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Icons } from '@/components/shared/icons';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 
 export default function Home() {
-  const explanationImage = PlaceHolderImages.find((img) => img.id === 'app-explanation');
   const howToPlayImage = PlaceHolderImages.find((img) => img.id === 'mandala-vayu');
+  const founderAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar-1');
 
 
   return (
@@ -55,21 +58,16 @@ export default function Home() {
             <p className="text-lg text-foreground/70 mt-2 max-w-3xl mx-auto">A game of strategy, logic, and visual harmony.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
-             <div className="relative aspect-square rounded-full shadow-lg shadow-primary/20 overflow-hidden border-4 border-primary/10">
+             <div className="relative aspect-square rounded-lg shadow-lg shadow-primary/20 overflow-hidden border-4 border-primary/10">
                {howToPlayImage && (
                 <Image 
                   src={howToPlayImage.imageUrl} 
                   alt={howToPlayImage.description} 
                   fill
-                  className="object-cover scale-110"
+                  className="object-cover"
                   data-ai-hint={howToPlayImage.imageHint}
                 />
                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-8 left-8 right-8 text-white">
-                  <h3 className="font-bold text-2xl font-headline">The Goal: Link All Rings</h3>
-                  <p className="mt-2 text-white/90">Align the central 'logo' symbol between adjacent rings to form a continuous chain of light.</p>
-                </div>
              </div>
              <div className="space-y-8">
               <div className="flex items-start gap-4">
@@ -106,12 +104,57 @@ export default function Home() {
 
       {/* Mission and Vision Section */}
       <section className="py-16 sm:py-24 bg-gradient-to-b from-secondary/30 to-background">
-         <div className="container mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">Our Mission & Vision</h2>
-            <p className="text-lg text-foreground/70 mt-4 max-w-4xl mx-auto">
-                In a world of fast-paced digital distractions, Mandala Path is a serene sanctuary. Our mission is to reintroduce the profound, timeless wisdom of Sanatana Dharma to a new generation in a way that is both engaging and meditative. We believe that games can be more than just entertainment; they can be a path to knowledge, self-reflection, and inner peace. By blending beautiful art, strategic gameplay, and sacred teachings, we aim to create a playful experience that enlightens the mind and soothes the soul.
-            </p>
+         <div className="container mx-auto">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">Our Purpose</h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl text-primary">Our Mission</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-foreground/80">
+                        <p>To reintroduce the profound, timeless wisdom of Sanatana Dharma to a new generation in a way that is both engaging and meditative.</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl text-primary">Our Vision</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-foreground/80">
+                         <p>We believe that games can be more than entertainment; they can be a path to knowledge, self-reflection, and inner peace. We aim to create a playful experience that enlightens the mind and soothes the soul.</p>
+                    </CardContent>
+                </Card>
+            </div>
          </div>
+      </section>
+      
+      {/* Founder Section */}
+      <section className="py-16 sm:py-24 bg-background">
+        <div className="container mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-12">Meet the Founder</h2>
+            <Card className="max-w-sm mx-auto text-left shadow-lg">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                   {founderAvatar && (
+                     <Avatar className="w-24 h-24 mb-4 border-4 border-primary/20">
+                        <AvatarImage src={founderAvatar.imageUrl} alt="Krish Gupta" data-ai-hint={founderAvatar.imageHint} />
+                        <AvatarFallback>KG</AvatarFallback>
+                    </Avatar>
+                   )}
+                    <h3 className="text-2xl font-headline font-bold text-primary">Krish Gupta</h3>
+                    <div className="mt-4 space-y-2 text-foreground/80">
+                        <a href="mailto:krishgupta200510@gmail.com" className="flex items-center justify-center gap-2 hover:text-primary transition-colors">
+                            <Mail className="w-4 h-4"/>
+                            krishgupta200510@gmail.com
+                        </a>
+                        <a href="https://krishgupta.in" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 hover:text-primary transition-colors">
+                            <Globe className="w-4 h-4"/>
+                            krishgupta.in
+                        </a>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
       </section>
 
     </div>
