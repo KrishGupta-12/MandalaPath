@@ -37,15 +37,15 @@ export default function DashboardPage() {
   const isLoadingMandalas = false; // Mandalas are from constants for now
 
   const getMandalaProgress = (mandalaId: string) => {
-    if (!userProgress) return 1;
+    if (!userProgress) return { level: 1, completed: false };
     const progress = userProgress.find(p => p.id === mandalaId);
-    return progress ? progress.level : 1;
+    return progress ? { level: progress.level, completed: !!progress.completed } : { level: 1, completed: false };
   };
   
   const getProgressPercentage = (mandala: Mandala, currentLevel: number) => {
-    const levels = mandala.maxRings - mandala.baseRings + 1;
+    const totalLevels = 9;
     const completedLevels = currentLevel - 1;
-    return (completedLevels / levels) * 100;
+    return (completedLevels / totalLevels) * 100;
   }
 
   if (isUserLoading || !user) {
@@ -77,10 +77,9 @@ export default function DashboardPage() {
         ) : (
         mandalas.map((mandala) => {
           const image = PlaceHolderImages.find((img) => img.id === mandala.imageId);
-          const currentLevel = getMandalaProgress(mandala.id);
+          const { level: currentLevel, completed: isCompleted } = getMandalaProgress(mandala.id);
           const isLocked = false; // All mandalas are unlocked for now
           const progressPercentage = getProgressPercentage(mandala, currentLevel);
-          const isCompleted = currentLevel > mandala.maxRings;
           
           return (
             <Card key={mandala.id} className={cn("overflow-hidden transition-all hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1 flex flex-col", isLocked && "bg-card/50 text-muted-foreground")}>
@@ -108,7 +107,7 @@ export default function DashboardPage() {
               <CardContent className="p-4 flex-grow">
                 <CardTitle className={cn("font-headline text-xl", !isLocked && "text-primary")}>{mandala.name}</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">Level {isCompleted ? 'Max' : currentLevel}</p>
-                <Progress value={progressPercentage} className="mt-2 h-2" />
+                <Progress value={isCompleted ? 100 : progressPercentage} className="mt-2 h-2" />
               </CardContent>
               <CardFooter className="p-4 pt-0">
                 <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold" disabled={isLocked || isCompleted}>

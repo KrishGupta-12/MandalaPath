@@ -13,6 +13,7 @@ export interface UserProfile {
 export interface UserMandalaProgress {
   id: string; // Corresponds to the mandalaId (e.g., 'agni')
   level: number;
+  completed?: boolean;
 }
 
 export interface Mandala {

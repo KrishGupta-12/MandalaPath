@@ -33,6 +33,10 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!isLoadingProgress) {
+        if(userProgress?.completed) {
+            router.push('/dashboard');
+            return;
+        }
         if (userProgress) {
             setCurrentLevel(userProgress.level);
         } else {
@@ -43,14 +47,14 @@ export default function PlayPage() {
             setCurrentLevel(1);
         }
     }
-  }, [userProgress, isLoadingProgress, userProgressRef, mandalaId]);
+  }, [userProgress, isLoadingProgress, userProgressRef, mandalaId, router]);
 
 
   const mandalaLevel: MandalaLevel | null = useMemo(() => {
     if (!mandalaConfig || currentLevel === null) return null;
 
-    // Ensure level doesn't exceed max rings logic
-    const level = Math.min(currentLevel, (mandalaConfig.maxRings - mandalaConfig.baseRings + 1));
+    const totalLevels = 9;
+    const level = Math.min(currentLevel, totalLevels);
     const rings = mandalaConfig.baseRings + level - 1;
 
     return {
@@ -67,15 +71,16 @@ export default function PlayPage() {
   const handlePuzzleSolved = async () => {
       if (!user || !mandalaId || !userProgressRef || !currentLevel || !mandalaConfig) return;
       const nextLevel = currentLevel + 1;
-       const isMastered = nextLevel > (mandalaConfig.maxRings - mandalaConfig.baseRings + 1)
-      
-       if (!isMastered) {
+      const totalLevels = 9;
+       
+       if (nextLevel <= totalLevels) {
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Optimistically update level for immediate re-render
        } else {
             // Mark as completed
-            setDocumentNonBlocking(userProgressRef, { completed: true }, { merge: true });
-            router.push('/dashboard');
+            setDocumentNonBlocking(userProgressRef, { completed: true, level: totalLevels }, { merge: true });
+            // Redirect to dashboard after a short delay to allow the user to see the dialog.
+            setTimeout(() => router.push('/dashboard'), 2000);
        }
   };
 
