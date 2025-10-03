@@ -3,23 +3,23 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/firebase';
 import { LEADERBOARD_DATA } from '@/lib/constants';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function LeaderboardPage() {
-    const { user } = useAuth();
+    const { user, isUserLoading } = useUser();
     const router = useRouter();
   
     useEffect(() => {
-      if (!user) {
+      if (!isUserLoading && !user) {
         router.push('/login');
       }
-    }, [user, router]);
+    }, [user, isUserLoading, router]);
   
-    if (!user) {
+    if (isUserLoading || !user) {
       return (
           <div className="flex h-screen items-center justify-center">
               <div className="text-center">

@@ -2,14 +2,14 @@
 import Link from 'next/link';
 import { Icons } from '@/components/shared/icons';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/firebase';
 import { UserNav } from '@/components/auth/user-nav';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Book, Crown } from 'lucide-react';
 
 export function Header() {
-  const { user } = useAuth();
+  const { user } = useUser();
   const pathname = usePathname();
 
   const navItems = [

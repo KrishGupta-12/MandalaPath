@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { AuthProvider } from '@/context/auth-provider';
 import { Header } from '@/components/shared/header';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
   title: 'Mandala Path',
@@ -26,11 +26,11 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('font-body antialiased min-h-screen flex flex-col')}>
-        <AuthProvider>
+        <FirebaseClientProvider>
           <Header />
           <main className="flex-grow">{children}</main>
           <Toaster />
-        </AuthProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

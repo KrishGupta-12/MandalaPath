@@ -1,6 +1,6 @@
 'use client';
 import { PuzzleBoard } from '@/components/game/puzzle-board';
-import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/firebase';
 import { MANDALAS } from '@/lib/constants';
 import { Mandala } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
@@ -10,16 +10,16 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 export default function PlayPage() {
-  const { user } = useAuth();
+  const { user, isUserLoading } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mandala, setMandala] = useState<Mandala | null>(null);
 
   useEffect(() => {
-    if (!user) {
+    if (!isUserLoading && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isUserLoading, router]);
 
   useEffect(() => {
     const mandalaId = searchParams.get('mandala');
@@ -32,7 +32,7 @@ export default function PlayPage() {
     }
   }, [searchParams, router]);
 
-  if (!user || !mandala) {
+  if (isUserLoading || !user || !mandala) {
     return (
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-center">

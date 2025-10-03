@@ -1,24 +1,39 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/hooks/use-auth';
+import { useUser, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export default function LoginPage() {
-  const { user, login } = useAuth();
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
+    if (!isUserLoading && user) {
       router.push('/dashboard');
     }
-  }, [user, router]);
-  
-  const handleLogin = () => {
-    login({ name: 'Guest User', email: 'guest@mandala.path' });
+  }, [user, isUserLoading, router]);
+
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Error signing in with Google', error);
+    }
   };
 
+  if (isUserLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (user) {
+    return null;
+  }
 
   return (
     <Card className="w-full max-w-sm mx-auto">

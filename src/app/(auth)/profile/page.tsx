@@ -6,23 +6,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/hooks/use-auth';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const avatarImage = PlaceHolderImages.find((img) => img.id === 'user-avatar-1');
-
+  
   useEffect(() => {
-    if (!user) {
+    if (!isUserLoading && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isUserLoading, router]);
 
-  if (!user) {
+  if (isUserLoading || !user) {
     return <p>Loading...</p>;
   }
 
@@ -38,8 +36,8 @@ export default function ProfilePage() {
         <CardContent className="space-y-6">
             <div className="flex items-center gap-6">
                 <Avatar className="w-20 h-20 border-4 border-primary/20">
-                    {avatarImage && <AvatarImage src={avatarImage.imageUrl} alt={user.name} />}
-                    <AvatarFallback className="text-2xl">{user.name.charAt(0)}</AvatarFallback>
+                    {user.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+                    <AvatarFallback className="text-2xl">{user.displayName ? user.displayName.charAt(0) : 'U'}</AvatarFallback>
                 </Avatar>
                 <Button variant="outline">Change Avatar</Button>
             </div>
@@ -47,11 +45,11 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue={user.name} />
+              <Input id="name" defaultValue={user.displayName || ''} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" defaultValue={user.email} readOnly />
+              <Input id="email" defaultValue={user.email || ''} readOnly />
             </div>
           </div>
           <Button className="bg-accent text-accent-foreground hover:bg-accent/90">Save Changes</Button>
