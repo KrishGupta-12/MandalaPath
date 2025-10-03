@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useUser, useAuth, useFirestore, setDocumentNonBlocking } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -49,6 +49,9 @@ export default function SignUpPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const newUser = userCredential.user;
+
+      // Update the user's auth profile with the display name
+      await updateProfile(newUser, { displayName: displayName });
 
       // Now, create the user profile document in Firestore
       const userDocRef = doc(firestore, 'users', newUser.uid);
