@@ -1,5 +1,5 @@
 'use client';
-import { CosmicRecall } from '@/components/game/cosmic-recall';
+import { PuzzleBoard } from '@/components/game/puzzle-board';
 import { useUser } from '@/firebase';
 import { Mandala } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
@@ -56,10 +56,10 @@ export default function PlayPage() {
             </Button>
         </div>
       <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-2">
-        {mandala.name} - Cosmic Recall
+        {mandala.name}
       </h1>
-      <p className="text-foreground/80 mb-8 max-w-lg text-center">Observe the sequence of sacred symbols, then repeat the pattern. How long can your memory flow?</p>
-      <CosmicRecall mandala={mandala} />
+      <p className="text-foreground/80 mb-8 max-w-lg text-center">Rotate the rings to align the sacred symbols and complete the mandala.</p>
+      <PuzzleBoard mandala={mandala} />
     </div>
   );
 }
