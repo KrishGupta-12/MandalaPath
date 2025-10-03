@@ -1,6 +1,6 @@
 'use client';
 import { PuzzleBoard } from '@/components/game/puzzle-board';
-import { useUser, useFirestore, useDoc, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
 import { Mandala, MandalaLevel, UserMandalaProgress } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MANDALAS } from '@/lib/constants';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 
 export default function PlayPage() {
   const { user, isUserLoading } = useUser();
@@ -33,15 +33,24 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!isLoadingProgress) {
-        setCurrentLevel(userProgress?.level || 1);
+        if (userProgress) {
+            setCurrentLevel(userProgress.level);
+        } else {
+            // If no progress document exists, create it for Level 1
+            if(userProgressRef) {
+                setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
+            }
+            setCurrentLevel(1);
+        }
     }
-  }, [userProgress, isLoadingProgress]);
+  }, [userProgress, isLoadingProgress, userProgressRef, mandalaId]);
 
 
   const mandalaLevel: MandalaLevel | null = useMemo(() => {
     if (!mandalaConfig || currentLevel === null) return null;
 
-    const level = Math.min(currentLevel, mandalaConfig.maxRings - mandalaConfig.baseRings + 1);
+    // Ensure level doesn't exceed max rings logic
+    const level = Math.min(currentLevel, (mandalaConfig.maxRings - mandalaConfig.baseRings + 1));
     const rings = mandalaConfig.baseRings + level - 1;
 
     return {
@@ -58,12 +67,14 @@ export default function PlayPage() {
   const handlePuzzleSolved = async () => {
       if (!user || !mandalaId || !userProgressRef || !currentLevel || !mandalaConfig) return;
       const nextLevel = currentLevel + 1;
-       if (nextLevel <= mandalaConfig.maxRings - mandalaConfig.baseRings + 1) {
+       const isMastered = nextLevel > (mandalaConfig.maxRings - mandalaConfig.baseRings + 1)
+      
+       if (!isMastered) {
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Optimistically update level for immediate re-render
        } else {
             // Mark as completed
-            setDocumentNonBlocking(userProgressRef, { level: nextLevel, completed: true }, { merge: true });
+            setDocumentNonBlocking(userProgressRef, { completed: true }, { merge: true });
             router.push('/dashboard');
        }
   };
