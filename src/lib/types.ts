@@ -19,21 +19,3 @@ export interface Mandala {
   solution: number[];
   symbols: Icon[];
 }
-
-export interface LeaderboardEntry {
-    id: string;
-    userId: string;
-    mandalaId: string;
-    score: number;
-    displayName: string;
-    photoURL?: string;
-    timestamp: any; // Firestore timestamp
-}
-
-export interface LeaderboardPlayer {
-  rank: number;
-  name: string;
-  score: number;
-  avatar: string;
-  userId: string;
-}

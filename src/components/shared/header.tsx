@@ -6,15 +6,14 @@ import { useUser } from '@/firebase';
 import { UserNav } from '@/components/auth/user-nav';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Book, Crown } from 'lucide-react';
+import { Book, Crown, Puzzle } from 'lucide-react';
 
 export function Header() {
   const { user } = useUser();
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/dashboard', label: 'Play', icon: Book },
-    { href: '/leaderboard', label: 'Leaderboard', icon: Crown },
+    { href: '/dashboard', label: 'Play', icon: Puzzle },
   ];
 
   return (

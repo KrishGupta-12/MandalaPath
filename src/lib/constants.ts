@@ -1,4 +1,4 @@
-import { Mandala, LeaderboardPlayer } from './types';
+import { Mandala } from './types';
 
 export const MANDALAS: Mandala[] = [
   {
@@ -8,8 +8,11 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 3,
     segments: 8,
-    solution: [0, 4, 0],
-    symbols: ['fire', 'phoenix', 'fire', 'swastika', 'fire', 'phoenix', 'fire', 'swastika'],
+    // The goal is to align the 'swastika' symbol, which is at index 3 and 7. 
+    // We'll set the solution to 0 for all rings, and the puzzle is solved when all rings are at rotation 0.
+    // The visual logic is that the swastika symbol is at the top.
+    solution: [0, 0, 0], 
+    symbols: ['fire', 'phoenix', 'fire', 'swastika', 'fire', 'phoenix', 'fire', 'logo'],
   },
   {
     id: 'jala',
@@ -18,8 +21,8 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 4,
     segments: 8,
-    solution: [2, 6, 1, 5],
-    symbols: ['water', 'garuda', 'water', 'logo', 'water', 'garuda', 'water', 'logo'],
+    solution: [0, 0, 0, 0],
+    symbols: ['water', 'garuda', 'water', 'swastika', 'water', 'garuda', 'water', 'logo'],
   },
   {
     id: 'prithvi',
@@ -28,8 +31,8 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 5,
     segments: 12,
-    solution: [0, 3, 6, 9, 0],
-    symbols: ['earth', 'logo', 'earth', 'logo', 'earth', 'swastika', 'earth', 'logo', 'earth', 'logo', 'earth', 'swastika'],
+    solution: [0, 0, 0, 0, 0],
+    symbols: ['earth', 'logo', 'earth', 'logo', 'earth', 'swastika', 'earth', 'logo', 'earth', 'logo', 'earth', 'logo'],
   },
   {
     id: 'vayu',
@@ -38,8 +41,8 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 5,
     segments: 12,
-    solution: [5, 10, 3, 8, 1],
-    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'logo', 'air', 'phoenix', 'air', 'garuda', 'air', 'logo'],
+    solution: [0, 0, 0, 0, 0],
+    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'swastika', 'air', 'phoenix', 'air', 'garuda', 'air', 'logo'],
   },
    {
     id: 'akasha',
@@ -48,8 +51,8 @@ export const MANDALAS: Mandala[] = [
     unlocked: true,
     rings: 6,
     segments: 12,
-    solution: [1, 3, 5, 7, 9, 11],
-    symbols: ['logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika'],
+    solution: [0,0,0,0,0,0],
+    symbols: ['logo', 'swastika', 'logo', 'phoenix', 'logo', 'garuda', 'logo', 'swastika', 'logo', 'phoenix', 'logo', 'garuda'],
   }
 ];
 
