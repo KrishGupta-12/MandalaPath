@@ -32,7 +32,7 @@ export default function Home() {
             </Button>
           </div>
           <div className="relative aspect-square max-w-md mx-auto w-full flex items-center justify-center">
-            <Icons.swastika className="w-full h-full text-primary animate-spin-slow" />
+            <Icons.logo className="w-full h-full text-primary animate-spin-slow" />
              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent rounded-full"></div>
           </div>
         </div>
