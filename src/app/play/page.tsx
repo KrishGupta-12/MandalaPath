@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react';
 import { PuzzleBoard } from '@/components/game/puzzle-board';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
 import { Mandala, MandalaLevel, UserMandalaProgress } from '@/lib/types';
@@ -10,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { MANDALAS } from '@/lib/constants';
 import { doc } from 'firebase/firestore';
 
-export default function PlayPage() {
+function PlayClientPage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function PlayPage() {
         } else if (userProgressRef && mandalaId) {
             // No progress document exists for this user and mandala, so create it for Level 1.
             // This is the correct entry point for a new player or a new mandala.
-            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId });
+            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
             setCurrentLevel(1);
         }
     }
@@ -126,5 +127,23 @@ export default function PlayPage() {
         onSolve={handlePuzzleSolved}
       />
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+      <div className="text-center">
+        <p>Loading Game...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function PlayPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <PlayClientPage />
+    </Suspense>
   );
 }
