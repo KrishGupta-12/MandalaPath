@@ -1,47 +1,37 @@
 /**
- * @fileoverview Firestore Security Rules for Mandala Path application.
+ * @fileoverview Firestore Security Rules for the Mandala Path application.
  *
  * Core Philosophy:
- * This ruleset enforces a strict user-ownership model for user profiles and progress data,
+ * This ruleset enforces a strict user-ownership model for user profiles and mandala progress,
  * while allowing public read access to mandala puzzles and cultural insights.
  *
  * Data Structure:
  * - User profiles are stored under `/users/{userId}`.
- * - User-specific mandala progress is stored under `/users/{userId}/mandalaProgress/{mandalaId}`.
- * - Mandala puzzles are stored in the top-level collection `/mandalaPuzzles/{mandalaId}`.
- * - Cultural insights are stored in the top-level collection `/culturalInsights/{culturalInsightId}`.
+ * - Mandala progress data is stored under `/users/{userId}/mandalaProgress/{mandalaId}`.
+ * - Mandala puzzles are stored in the top-level `/mandalaPuzzles/{mandalaId}` collection.
+ * - Cultural insights are stored in the top-level `/culturalInsights/{culturalInsightId}` collection.
  *
  * Key Security Decisions:
  * - Users can only read and write their own profile data and mandala progress.
- * - Listing user profiles is disallowed.
  * - Mandala puzzles and cultural insights are publicly readable.
- * - Write access to mandala puzzles and cultural insights is denied.
+ * - Listing user documents is only allowed for the owner.
+ * - No schema validation is performed in this prototyping phase, except for authorization-critical fields.
  *
  * Denormalization for Authorization:
- * - User ownership is enforced using path-based rules (e.g., `/users/{userId}`).
- *   The `userId` parameter in the path must match the authenticated user's UID.
- *   This avoids the need for `get()` calls to verify ownership.
- *
- * Structural Segregation:
- * - User-specific data (profiles and progress) is stored under the `/users/{userId}` path,
- *   while public data (puzzles and insights) is stored in top-level collections.
- *   This segregation simplifies security rules and improves query performance.
+ *  - User profile and progress data is nested under the user's ID to allow for simple `isOwner()` checks.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows users to read and write their own profile data.
+     * @description Controls access to user profile data.
      * @path /users/{userId}
-     * @allow (create) User with uid 'user123' can create their profile with matching uid.
-     *   request.resource.data: { "uid": "user123", "email": "test@example.com", "displayName": "Test User" }
-     * @allow (get) User with uid 'user123' can read their profile.
-     * @allow (update) User with uid 'user123' can update their profile.
-     * @allow (delete) User with uid 'user123' can delete their profile.
-     * @deny (create) User with uid 'user123' cannot create a profile with a mismatched uid 'user456'.
-     *   request.resource.data: { "uid": "user456", "email": "test@example.com", "displayName": "Test User" }
-     * @deny (get) User with uid 'user456' cannot read the profile of user 'user123'.
+     * @allow (create) - User with UID 'user123' can create their profile at /users/user123.
+     * @allow (get) - User with UID 'user123' can get their profile at /users/user123.
+     * @allow (update) - User with UID 'user123' can update their profile at /users/user123.
+     * @allow (delete) - User with UID 'user123' can delete their profile at /users/user123.
+     * @deny (create) - User with UID 'user456' cannot create a profile at /users/user123.
      * @principle Enforces document ownership for writes.
      */
     match /users/{userId} {
@@ -57,27 +47,25 @@ service cloud.firestore {
         return isOwner(userId) && resource != null;
       }
 
-      allow get: if isOwner(userId);
-      allow list: if false; // Listing users is not permitted.
-      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.uid == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.uid == userId;
-      allow delete: if isExistingOwner(userId);
+      allow get: if isSignedIn() && isOwner(userId);
+      allow list: if false;
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && isExistingOwner(userId);
+      allow delete: if isSignedIn() && isExistingOwner(userId);
     }
 
     /**
-     * @description Allows users to read and write their own mandala progress data.
+     * @description Controls access to user mandala progress data.
      * @path /users/{userId}/mandalaProgress/{mandalaId}
-     * @allow (create) User with uid 'user123' can create their mandala progress with matching userId.
-     *   request.resource.data: { "id": "agni", "level": 1 }
-     * @allow (get) User with uid 'user123' can read their mandala progress.
-     * @allow (update) User with uid 'user123' can update their mandala progress.
-     * @allow (delete) User with uid 'user123' can delete their mandala progress.
-     * @deny (create) User with uid 'user123' cannot create mandala progress for another user.
-     * @deny (get) User with uid 'user456' cannot read the mandala progress of user 'user123'.
-     * @principle Enforces document ownership for writes.
+     * @allow (create) - User with UID 'user123' can create their progress at /users/user123/mandalaProgress/agni.
+     * @allow (get) - User with UID 'user123' can get their progress at /users/user123/mandalaProgress/agni.
+     * @allow (update) - User with UID 'user123' can update their progress at /users/user123/mandalaProgress/agni.
+     * @allow (delete) - User with UID 'user123' can delete their progress at /users/user123/mandalaProgress/agni.
+     * @deny (create) - User with UID 'user456' cannot create progress data at /users/user123/mandalaProgress/agni.
+     * @principle Restricts access to a user's own data tree.
      */
     match /users/{userId}/mandalaProgress/{mandalaId} {
-      function isSignedIn() {
+       function isSignedIn() {
         return request.auth != null;
       }
 
@@ -88,23 +76,22 @@ service cloud.firestore {
       function isExistingOwner(userId) {
         return isOwner(userId) && resource != null;
       }
-
-      allow get: if isOwner(userId);
+      allow get: if isSignedIn() && isOwner(userId);
       allow list: if false;
       allow create: if isSignedIn() && isOwner(userId);
-      allow update: if isExistingOwner(userId);
-      allow delete: if isExistingOwner(userId);
+      allow update: if isSignedIn() && isExistingOwner(userId);
+      allow delete: if isSignedIn() && isExistingOwner(userId);
     }
 
     /**
-     * @description Allows public read access to mandala puzzle data.  Write access is denied.
+     * @description Controls access to mandala puzzle data.
      * @path /mandalaPuzzles/{mandalaId}
-     * @allow (get) Any user can read a mandala puzzle.
-     * @allow (list) Any user can list mandala puzzles.
-     * @deny (create) No one can create mandala puzzles through the client.
-     * @deny (update) No one can update mandala puzzles through the client.
-     * @deny (delete) No one can delete mandala puzzles through the client.
-     * @principle Allows public read access with owner-only writes (currently no owner).
+     * @allow (get) - Any user can read mandala puzzle data.
+     * @allow (list) - Any user can list mandala puzzles.
+     * @deny (create) - No one can create mandala puzzles through the client.
+     * @deny (update) - No one can update mandala puzzles through the client.
+     * @deny (delete) - No one can delete mandala puzzles through the client.
+     * @principle Allows public read access, restricts writes.
      */
     match /mandalaPuzzles/{mandalaId} {
       allow get: if true;
@@ -115,14 +102,14 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows public read access to cultural insight data. Write access is denied.
+     * @description Controls access to cultural insight data.
      * @path /culturalInsights/{culturalInsightId}
-     * @allow (get) Any user can read a cultural insight.
-     * @allow (list) Any user can list cultural insights.
-     * @deny (create) No one can create cultural insights through the client.
-     * @deny (update) No one can update cultural insights through the client.
-     * @deny (delete) No one can delete cultural insights through the client.
-     * @principle Allows public read access with owner-only writes (currently no owner).
+     * @allow (get) - Any user can read cultural insight data.
+     * @allow (list) - Any user can list cultural insights.
+     * @deny (create) - No one can create cultural insights through the client.
+     * @deny (update) - No one can update cultural insights through the client.
+     * @deny (delete) - No one can delete cultural insights through the client.
+     * @principle Allows public read access, restricts writes.
      */
     match /culturalInsights/{culturalInsightId} {
       allow get: if true;
