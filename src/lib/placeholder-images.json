@@ -2,9 +2,15 @@
   "placeholderImages": [
     {
       "id": "hero-mandala",
-      "description": "A vibrant and intricate mandala pattern spinning slowly.",
-      "imageUrl": "https://images.unsplash.com/photo-1604374125777-592bb994d27f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtYW5kYWxhJTIwcGF0dGVybnxlbnwwfHx8fDE3NTk0OTY0MDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "mandala pattern"
+      "description": "An intricate, golden Om symbol glowing with divine light.",
+      "imageUrl": "https://images.unsplash.com/photo-1628770459529-682e4f049444?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnLOWRAUVuJTIwT20lMjBzeW1ib2x8ZW58MHx8fHwxNzU5NTg1ODU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "om symbol"
+    },
+    {
+      "id": "app-explanation",
+      "description": "A majestic Hindu temple gopuram reaching towards the sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1599324410149-7c38255b312a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoaW5kdSUyMHRlbXBsZXxlbnwwfHx8fDE3NTk1ODU4NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hindu temple"
     },
     {
       "id": "mandala-agni",

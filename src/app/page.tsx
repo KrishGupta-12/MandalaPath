@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-mandala');
+  const explanationImage = PlaceHolderImages.find((img) => img.id === 'app-explanation');
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-gradient-to-b from-background to-secondary/30">
@@ -55,13 +56,15 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
              <div className="relative aspect-video rounded-xl shadow-lg shadow-primary/10 overflow-hidden">
-               <Image 
-                src="https://picsum.photos/seed/app-explain/600/400" 
-                alt="Mandala Puzzle Gameplay" 
-                fill
-                className="object-cover"
-                data-ai-hint="mandala puzzle"
+               {explanationImage && (
+                <Image 
+                  src={explanationImage.imageUrl} 
+                  alt={explanationImage.description} 
+                  fill
+                  className="object-cover"
+                  data-ai-hint={explanationImage.imageHint}
                 />
+               )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
                   <h3 className="font-bold text-xl font-headline">Align. Solve. Awaken.</h3>
