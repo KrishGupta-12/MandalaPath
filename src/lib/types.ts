@@ -24,7 +24,9 @@ export interface LeaderboardEntry {
     id: string;
     userId: string;
     mandalaId: string;
-    score: number; // Changed from completionTime
+    score: number;
+    displayName: string;
+    photoURL?: string;
     timestamp: any; // Firestore timestamp
 }
 

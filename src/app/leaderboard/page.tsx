@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
-import type { LeaderboardEntry, LeaderboardPlayer, UserProfile } from '@/lib/types';
+import type { LeaderboardEntry, LeaderboardPlayer } from '@/lib/types';
 
 export default function LeaderboardPage() {
     const { user, isUserLoading } = useUser();
@@ -20,31 +20,22 @@ export default function LeaderboardPage() {
         return query(collection(firestore, 'leaderboardEntries'), orderBy('score', 'desc'), limit(20));
     }, [firestore]);
 
-    const usersQuery = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return collection(firestore, 'users');
-    }, [firestore]);
-
     const { data: leaderboardData, isLoading: isLoadingLeaderboard } = useCollection<LeaderboardEntry>(leaderboardQuery);
-    const { data: usersData, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
     const populatedLeaderboard = useMemo<LeaderboardPlayer[]>(() => {
-        if (!leaderboardData || !usersData) return [];
-
-        const usersMap = new Map(usersData.map(u => [u.id, u]));
+        if (!leaderboardData) return [];
         
         return leaderboardData.map((entry, index) => {
-            const userProfile = usersMap.get(entry.userId);
             return {
                 rank: index + 1,
-                name: userProfile?.displayName || 'Anonymous',
+                name: entry.displayName || 'Anonymous',
                 score: entry.score,
-                avatar: userProfile?.photoURL || `https://picsum.photos/seed/${entry.userId}/40/40`,
+                avatar: entry.photoURL || `https://picsum.photos/seed/${entry.userId}/40/40`,
                 userId: entry.userId,
             };
         });
 
-    }, [leaderboardData, usersData]);
+    }, [leaderboardData]);
   
     useEffect(() => {
       if (!isUserLoading && !user) {
@@ -86,7 +77,7 @@ export default function LeaderboardPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {(isLoadingLeaderboard || isLoadingUsers) ? (
+                            {isLoadingLeaderboard ? (
                                 Array.from({length: 5}).map((_, i) => (
                                     <TableRow key={i}>
                                         <TableCell><Skeleton className="h-5 w-5 rounded-full" /></TableCell>

@@ -97,6 +97,8 @@ export function CosmicRecall({ mandala }: CosmicRecallProps) {
         const leaderboardRef = collection(firestore, 'leaderboardEntries');
         addDocumentNonBlocking(leaderboardRef, {
             userId: user.uid,
+            displayName: user.displayName || 'Anonymous',
+            photoURL: user.photoURL || '',
             mandalaId: mandala.id,
             score: score,
             timestamp: serverTimestamp(),
