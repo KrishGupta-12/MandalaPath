@@ -17,7 +17,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['"PT Sans"', 'sans-serif'],
+        body: ['"Lora"', 'serif'],
         headline: ['"Playfair Display"', 'serif'],
         code: ['monospace'],
       },
@@ -98,12 +98,17 @@ export default {
         'mandala-glow': {
           '0%, 100%': { boxShadow: '0 0 20px 5px hsl(var(--primary)), 0 0 30px 10px hsl(var(--accent))' },
           '50%': { boxShadow: '0 0 40px 15px hsl(var(--primary)), 0 0 60px 20px hsl(var(--accent))' },
+        },
+        'spin-slow': {
+          'from': { transform: 'rotate(0deg)' },
+          'to': { transform: 'rotate(360deg)' },
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'mandala-glow': 'mandala-glow 2s ease-in-out infinite',
+        'spin-slow': 'spin-slow 60s linear infinite',
       },
     },
   },

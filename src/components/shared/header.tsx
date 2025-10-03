@@ -6,14 +6,15 @@ import { useAuth } from '@/hooks/use-auth';
 import { UserNav } from '@/components/auth/user-nav';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { Book, Crown } from 'lucide-react';
 
 export function Header() {
   const { user } = useAuth();
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/dashboard', label: 'Play' },
-    { href: '/leaderboard', label: 'Leaderboard' },
+    { href: '/dashboard', label: 'Play', icon: Book },
+    { href: '/leaderboard', label: 'Leaderboard', icon: Crown },
   ];
 
   return (
@@ -30,10 +31,11 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "transition-colors hover:text-primary",
-                  pathname === item.href ? "text-primary" : "text-muted-foreground"
+                  "flex items-center gap-2 transition-colors hover:text-primary",
+                  pathname?.startsWith(item.href) ? "text-primary" : "text-muted-foreground"
                 )}
               >
+                <item.icon className="h-4 w-4" />
                 {item.label}
               </Link>
             ))}
@@ -43,8 +45,8 @@ export function Header() {
           {user ? (
             <UserNav />
           ) : (
-            <Button asChild>
-              <Link href="/login">Login</Link>
+            <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <Link href="/login">Begin Journey</Link>
             </Button>
           )}
         </div>
