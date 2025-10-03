@@ -1,8 +1,12 @@
 import { Icon } from '@/components/shared/icons';
 
-export interface User {
-  name: string;
+export interface UserProfile {
+  id: string;
+  googleId: string;
   email: string;
+  displayName: string;
+  photoURL?: string;
+  unlockedMandalaIds?: string[];
 }
 
 export interface Mandala {
@@ -16,10 +20,11 @@ export interface Mandala {
   symbols: Icon[];
 }
 
-export interface LeaderboardPlayer {
-    rank: number;
-    name: string;
-    time: string;
-    moves: number;
-    avatar: string;
+export interface LeaderboardEntry {
+    id: string;
+    userId: string;
+    mandalaId: string;
+    completionTime: number;
+    movesUsed: number;
+    timestamp: any; // Firestore timestamp
 }

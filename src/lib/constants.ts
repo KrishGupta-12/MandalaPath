@@ -1,5 +1,7 @@
 import { Mandala, LeaderboardPlayer } from './types';
 
+// This data is now fetched from Firestore. This file is kept for reference or future use.
+
 export const MANDALAS: Mandala[] = [
   {
     id: 'agni',
@@ -25,7 +27,7 @@ export const MANDALAS: Mandala[] = [
     id: 'prithvi',
     name: 'Mandala of Prithvi',
     imageId: 'mandala-prithvi',
-    unlocked: false,
+    unlocked: true,
     rings: 5,
     segments: 12,
     solution: [0, 3, 6, 9, 0],
@@ -35,12 +37,22 @@ export const MANDALAS: Mandala[] = [
     id: 'vayu',
     name: 'Mandala of Vayu',
     imageId: 'mandala-vayu',
-    unlocked: false,
+    unlocked: true,
     rings: 5,
     segments: 12,
     solution: [5, 10, 3, 8, 1],
     symbols: ['air', 'phoenix', 'air', 'garuda', 'air'],
   },
+   {
+    id: 'akasha',
+    name: 'Mandala of Akasha',
+    imageId: 'mandala-akasha',
+    unlocked: true,
+    rings: 6,
+    segments: 12,
+    solution: [0, 2, 4, 6, 8, 10],
+    symbols: ['logo', 'swastika', 'logo', 'swastika', 'logo', 'swastika'],
+  }
 ];
 
 export const LEADERBOARD_DATA: { global: LeaderboardPlayer[], friends: LeaderboardPlayer[] } = {

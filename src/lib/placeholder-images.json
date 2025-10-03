@@ -31,6 +31,12 @@
       "imageHint": "air mandala"
     },
     {
+      "id": "mandala-akasha",
+      "description": "A mandala representing the element of ether/space, with cosmic patterns.",
+      "imageUrl": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "space mandala"
+    },
+    {
       "id": "user-avatar-1",
       "description": "Placeholder for user avatar.",
       "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTkzOTU3Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080",

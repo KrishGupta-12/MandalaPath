@@ -1,8 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useUser } from '@/firebase';
-import { MANDALAS } from '@/lib/constants';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { Lock, Play } from 'lucide-react';
@@ -10,10 +9,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { collection } from 'firebase/firestore';
+import type { Mandala } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const firestore = useFirestore();
+
+  const mandalasQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'mandalaPuzzles');
+  }, [firestore]);
+
+  const { data: mandalas, isLoading: isLoadingMandalas } = useCollection<Mandala>(mandalasQuery);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -36,7 +46,18 @@ export default function DashboardPage() {
       <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-2">Choose a Mandala</h1>
       <p className="text-foreground/80 mb-8">Select a puzzle to begin your meditation.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {MANDALAS.map((mandala) => {
+        {(isLoadingMandalas || !mandalas) ? (
+            Array.from({ length: 5 }).map((_, i) => (
+                <Card key={i}>
+                    <Skeleton className="aspect-square w-full" />
+                    <CardContent className="p-4 space-y-2">
+                        <Skeleton className="h-6 w-3/4" />
+                        <Skeleton className="h-10 w-full" />
+                    </CardContent>
+                </Card>
+            ))
+        ) : (
+        mandalas.map((mandala) => {
           const image = PlaceHolderImages.find((img) => img.id === mandala.imageId);
           const isLocked = !mandala.unlocked;
           return (
@@ -72,7 +93,7 @@ export default function DashboardPage() {
               </CardFooter>
             </Card>
           );
-        })}
+        }))}
       </div>
     </div>
   );
