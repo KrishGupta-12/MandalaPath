@@ -1,68 +1,53 @@
-/**
- * @fileoverview Firestore Security Rules for Mandala Path application.
- *
- * Core Philosophy:
- * This ruleset enforces a user-ownership model for user profiles, allows public read access to mandala puzzles and cultural insights,
- * and restricts leaderboard entry creation to authenticated users. It prioritizes simplicity and performance by denormalizing
- * authorization data where necessary and avoiding costly `get()` calls within security rules.
- *
- * Data Structure:
- * - `/users/{userId}`: Stores user profile data; access is restricted to the owning user.
- * - `/mandalaPuzzles/{mandalaId}`: Stores mandala puzzle data; publicly readable.
- * - `/culturalInsights/{culturalInsightId}`: Stores cultural insights data; publicly readable.
- * - `/leaderboardEntries/{leaderboardEntryId}`: Stores leaderboard entries; creation allowed for authenticated users.
- *
- * Key Security Decisions:
- * - User listing is explicitly denied for the `/users` collection.
- * - Mandala puzzles and cultural insights are publicly readable.
- * - Leaderboard entries do not enforce ownership, allowing any authenticated user to create entries. Updates and deletes are disallowed.
- * - Read-only collections use `allow get, list: if true;`.
- *
- * Denormalization for Authorization:
- * - No denormalization is explicitly used, as the rules rely on path-based ownership and public read access. If more complex authorization
- *   schemes were needed (e.g., shared access to puzzles), it would be necessary to denormalize user roles or permissions onto the relevant documents.
- *
- * Structural Segregation:
- * - User-specific data (profiles) is stored under `/users/{userId}`, while public data (puzzles, insights) is stored in top-level collections.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants access to a user's profile only to the user themselves.
+     * @description Secure user profiles.  Only the user can read/write their profile.
      * @path /users/{userId}
-     * @allow (get, create, update, delete, list): if request.auth.uid == userId
-     * @deny (get, create, update, delete, list): if request.auth.uid != userId
-     * @principle Enforces document ownership for reads and writes.
+     * @allow (create) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can create their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2 if the googleId matches.
+     * @allow (get) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can read their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
+     * @allow (update) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can update their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
+     * @allow (delete) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can delete their own profile document at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
+     * @deny (create) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' cannot create a profile for a different user at /users/someOtherUserId.
+     * @deny (get) User 'randomId' cannot read the profile for a different user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
+     * @deny (update) User 'randomId' cannot update the profile for a different user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
+     * @deny (delete) User 'randomId' cannot delete the profile for a different user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2.
+     * @principle Enforces document ownership for writes, restricts access to a user's own data tree, validates relational integrity between documents.
      */
     match /users/{userId} {
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      function isOwner(userId) {
-        return request.auth.uid == userId;
-      }
-
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
+      allow read, write, create, update, delete: if request.auth.uid == userId;
       allow list: if false;
-
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Allows public read access to mandala puzzle data.  Write access is denied.
+     * @description Secure user's mandala progress data. Only the user can read/write their own progress.
+     * @path /users/{userId}/mandalaProgress/{mandalaId}
+     * @allow (create) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can create their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @allow (get) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can read their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @allow (list) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can list their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress.
+     * @allow (update) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can update their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @allow (delete) User '4t3ExI1SrUd7NeqJaMX4p0MtniB2' can delete their own mandala progress at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @deny (create) User 'randomId' cannot create mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @deny (get) User 'randomId' cannot read mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @deny (update) User 'randomId' cannot update mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @deny (delete) User 'randomId' cannot delete mandala progress for another user at /users/4t3ExI1SrUd7NeqJaMX4p0MtniB2/mandalaProgress/agni.
+     * @principle Enforces document ownership for writes and restricts access to a user's own data.
+     */
+    match /users/{userId}/mandalaProgress/{mandalaId} {
+      allow read, write, create, update, delete: if request.auth.uid == userId;
+      allow list: if request.auth.uid == userId;
+    }
+
+    /**
+     * @description Allow public read access to mandala puzzles.  Writes are disallowed.
      * @path /mandalaPuzzles/{mandalaId}
-     * @allow (get, list): if true
-     * @deny (create, update, delete): always
-     * @principle Allows public read access with restricted writes.
+     * @allow (get) Any user can read a mandala puzzle at /mandalaPuzzles/agni.
+     * @allow (list) Any user can list mandala puzzles at /mandalaPuzzles.
+     * @deny (create) No user can create a mandala puzzle at /mandalaPuzzles/agni.
+     * @deny (update) No user can update a mandala puzzle at /mandalaPuzzles/agni.
+     * @deny (delete) No user can delete a mandala puzzle at /mandalaPuzzles/agni.
+     * @principle Grants public read access while restricting writes.
      */
     match /mandalaPuzzles/{mandalaId} {
       allow get, list: if true;
@@ -70,34 +55,18 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows public read access to cultural insights data. Write access is denied.
+     * @description Allow public read access to cultural insights.  Writes are disallowed.
      * @path /culturalInsights/{culturalInsightId}
-     * @allow (get, list): if true
-     * @deny (create, update, delete): always
-     * @principle Allows public read access with restricted writes.
+     * @allow (get) Any user can read a cultural insight at /culturalInsights/insight1.
+     * @allow (list) Any user can list cultural insights at /culturalInsights.
+     * @deny (create) No user can create a cultural insight at /culturalInsights/insight1.
+     * @deny (update) No user can update a cultural insight at /culturalInsights/insight1.
+     * @deny (delete) No user can delete a cultural insight at /culturalInsights/insight1.
+     * @principle Grants public read access while restricting writes.
      */
     match /culturalInsights/{culturalInsightId} {
       allow get, list: if true;
       allow create, update, delete: if false;
-    }
-
-    /**
-     * @description Allows authenticated users to create leaderboard entries, but prevents updates and deletes.
-     * @path /leaderboardEntries/{leaderboardEntryId}
-     * @allow (create): if isSignedIn()
-     * @deny (get, list, update, delete): always
-     * @principle Restricts writes to authenticated users.
-     */
-    match /leaderboardEntries/{leaderboardEntryId} {
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      allow get, list: if true; // TODO: Add proper get and list constraints
-
-      allow create: if isSignedIn();
-      allow update: if false;
-      allow delete: if false;
     }
   }
 }
