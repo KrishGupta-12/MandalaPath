@@ -33,10 +33,6 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!isLoadingProgress) {
-        if(userProgress?.completed) {
-            router.push('/dashboard');
-            return;
-        }
         if (userProgress) {
             setCurrentLevel(userProgress.level);
         } else {
@@ -77,10 +73,10 @@ export default function PlayPage() {
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Optimistically update level for immediate re-render
        } else {
-            // Mark as completed
-            setDocumentNonBlocking(userProgressRef, { completed: true, level: totalLevels }, { merge: true });
-            // Redirect to dashboard after a short delay to allow the user to see the dialog.
-            setTimeout(() => router.push('/dashboard'), 2000);
+            // After completing the final level, reset to level 1 for replayability
+            setDocumentNonBlocking(userProgressRef, { level: 1 }, { merge: true });
+            // Let the dialog show, then on close it will be reset. We can set the local level to 1 after a delay.
+            setTimeout(() => setCurrentLevel(1), 2000); 
        }
   };
 

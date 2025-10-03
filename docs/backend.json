@@ -49,10 +49,6 @@
         "level": {
           "type": "number",
           "description": "The current level the user has reached for this mandala."
-        },
-        "completed": {
-          "type": "boolean",
-          "description": "Whether the user has mastered this mandala path."
         }
       },
       "required": [
