@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/firebase';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { Lock, Play } from 'lucide-react';
@@ -9,21 +9,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { collection } from 'firebase/firestore';
+import { MANDALAS } from '@/lib/constants';
 import type { Mandala } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const firestore = useFirestore();
 
-  const mandalasQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return collection(firestore, 'mandalaPuzzles');
-  }, [firestore]);
-
-  const { data: mandalas, isLoading: isLoadingMandalas } = useCollection<Mandala>(mandalasQuery);
+  // Reverted to using local data for now.
+  const mandalas: Mandala[] = MANDALAS;
+  const isLoadingMandalas = false;
 
   useEffect(() => {
     if (!isUserLoading && !user) {

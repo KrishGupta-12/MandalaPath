@@ -108,7 +108,7 @@ export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
                         transform: `rotate(${rotations[actualRingIndex] * segmentAngle}deg)`,
                     }}
                     onClick={() => handleRotate(actualRingIndex, 'cw')}
-                    onContextMenu={(e) => { e.preventDefault(); handleRotate(actualRingİndex, 'ccw'); }}
+                    onContextMenu={(e) => { e.preventDefault(); handleRotate(actualRingIndex, 'ccw'); }}
                 >
                 {Array.from({ length: mandala.segments }).map((_, segmentIndex) => (
                   <div

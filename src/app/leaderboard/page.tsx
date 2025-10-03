@@ -3,41 +3,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/firebase';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
-import type { LeaderboardEntry, UserProfile } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
-
-interface PopulatedLeaderboardEntry extends Omit<LeaderboardEntry, 'userId'> {
-    userProfile: UserProfile | null;
-}
+import { LEADERBOARD_DATA } from '@/lib/constants';
 
 export default function LeaderboardPage() {
     const { user, isUserLoading } = useUser();
     const router = useRouter();
-    const firestore = useFirestore();
 
-    const leaderboardQuery = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return query(collection(firestore, 'leaderboardEntries'), orderBy('completionTime', 'asc'), limit(10));
-    }, [firestore]);
-
-    const { data: leaderboardEntries, isLoading: isLoadingLeaderboard } = useCollection<LeaderboardEntry>(leaderboardQuery);
-
-    const usersQuery = useMemoFirebase(() => {
-        if(!firestore) return null;
-        return collection(firestore, 'users');
-    }, [firestore]);
-
-    const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
-
-    const populatedLeaderboard = leaderboardEntries?.map(entry => {
-        const userProfile = users?.find(u => u.id === entry.userId) || null;
-        return { ...entry, userProfile };
-    }) || [];
+    const populatedLeaderboard = LEADERBOARD_DATA.global;
+    const isLoadingLeaderboard = false;
+    const isLoadingUsers = false;
   
     useEffect(() => {
       if (!isUserLoading && !user) {
@@ -66,7 +45,7 @@ export default function LeaderboardPage() {
                 <div className="p-4 border-b">
                     <TabsList>
                         <TabsTrigger value="global">Global</TabsTrigger>
-                        <TabsTrigger value="friends">Friends</TabsTrigger>
+                        <TabsTrigger value="friends" disabled>Friends</TabsTrigger>
                     </TabsList>
                 </div>
                 <TabsContent value="global" className="m-0">
@@ -91,21 +70,20 @@ export default function LeaderboardPage() {
                                 ))
                             ) : (
                             populatedLeaderboard.map((player, index) => {
-                                const avatar = PlaceHolderImages.find(img => img.id === 'user-avatar-1');
                                 return (
-                                <TableRow key={player.id}>
+                                <TableRow key={player.rank}>
                                     <TableCell className="font-medium text-primary">{index + 1}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
                                             <Avatar className="w-8 h-8">
-                                                {player.userProfile?.photoURL && <AvatarImage src={player.userProfile.photoURL} alt={player.userProfile.displayName} />}
-                                                <AvatarFallback>{player.userProfile?.displayName.charAt(0)}</AvatarFallback>
+                                                 <AvatarImage src={player.avatar} alt={player.name} />
+                                                <AvatarFallback>{player.name.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <span className="font-medium">{player.userProfile?.displayName || 'Anonymous'}</span>
+                                            <span className="font-medium">{player.name || 'Anonymous'}</span>
                                         </div>
                                     </TableCell>
-                                    <TableCell className="text-right">{player.completionTime}s</TableCell>
-                                    <TableCell className="text-right">{player.movesUsed}</TableCell>
+                                    <TableCell className="text-right">{player.time}</TableCell>
+                                    <TableCell className="text-right">{player.moves}</TableCell>
                                 </TableRow>
                             )})
                             )}

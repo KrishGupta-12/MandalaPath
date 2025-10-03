@@ -1,7 +1,5 @@
 import { Mandala, LeaderboardPlayer } from './types';
 
-// This data is now fetched from Firestore. This file is kept for reference or future use.
-
 export const MANDALAS: Mandala[] = [
   {
     id: 'agni',
@@ -57,11 +55,11 @@ export const MANDALAS: Mandala[] = [
 
 export const LEADERBOARD_DATA: { global: LeaderboardPlayer[], friends: LeaderboardPlayer[] } = {
     global: [
-      { rank: 1, name: 'Enlightened Master', time: '0:32', moves: 5, avatar: '/avatars/1.png' },
-      { rank: 2, name: 'Cosmic-Traveler', time: '0:45', moves: 8, avatar: '/avatars/2.png' },
-      { rank: 3, name: 'Aether-Mind', time: '0:51', moves: 11, avatar: '/avatars/3.png' },
-      { rank: 4, name: 'Guest User', time: '1:12', moves: 15, avatar: '/avatars/4.png' },
-      { rank: 5, name: 'Chakra-Spinner', time: '1:25', moves: 20, avatar: '/avatars/5.png' },
+      { rank: 1, name: 'Enlightened Master', time: '0:32', moves: 5, avatar: 'https://picsum.photos/seed/1/40/40' },
+      { rank: 2, name: 'Cosmic-Traveler', time: '0:45', moves: 8, avatar: 'https://picsum.photos/seed/2/40/40' },
+      { rank: 3, name: 'Aether-Mind', time: '0:51', moves: 11, avatar: 'https://picsum.photos/seed/3/40/40' },
+      { rank: 4, name: 'Guest User', time: '1:12', moves: 15, avatar: 'https://picsum.photos/seed/4/40/40' },
+      { rank: 5, name: 'Chakra-Spinner', time: '1:25', moves: 20, avatar: 'https://picsum.photos/seed/5/40/40' },
     ],
     friends: [],
 }

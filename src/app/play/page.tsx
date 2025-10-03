@@ -1,28 +1,26 @@
 'use client';
 import { PuzzleBoard } from '@/components/game/puzzle-board';
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/firebase';
 import { Mandala } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { doc } from 'firebase/firestore';
+import { MANDALAS } from '@/lib/constants';
 
 export default function PlayPage() {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const firestore = useFirestore();
   
   const mandalaId = searchParams.get('mandala');
 
-  const mandalaRef = useMemoFirebase(() => {
-    if (!firestore || !mandalaId) return null;
-    return doc(firestore, 'mandalaPuzzles', mandalaId);
-  }, [firestore, mandalaId]);
+  const mandala = useMemo(() => {
+    return MANDALAS.find(m => m.id === mandalaId);
+  }, [mandalaId]);
   
-  const { data: mandala, isLoading: isLoadingMandala } = useDoc<Mandala>(mandalaRef);
+  const isLoadingMandala = false;
 
 
   useEffect(() => {

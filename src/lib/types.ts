@@ -28,3 +28,11 @@ export interface LeaderboardEntry {
     movesUsed: number;
     timestamp: any; // Firestore timestamp
 }
+
+export interface LeaderboardPlayer {
+  rank: number;
+  name: string;
+  time: string;
+  moves: number;
+  avatar: string;
+}
