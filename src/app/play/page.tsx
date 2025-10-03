@@ -58,7 +58,7 @@ export default function PlayPage() {
       <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-2">
         {mandala.name}
       </h1>
-      <p className="text-foreground/80 mb-8 max-w-lg text-center">Align the Swastika symbols to the top to complete the pattern.</p>
+      <p className="text-foreground/80 mb-8 max-w-lg text-center">Align the Swastika symbols between adjacent rings to link them all.</p>
       <PuzzleBoard mandala={mandala} />
     </div>
   );
