@@ -27,13 +27,6 @@
           "type": "string",
           "description": "URL of the user's profile photo, if available.",
           "format": "uri"
-        },
-        "unlockedMandalaIds": {
-          "type": "array",
-          "description": "References to unlocked Mandala puzzles.",
-          "items": {
-            "type": "string"
-          }
         }
       },
       "required": [
@@ -41,6 +34,30 @@
         "googleId",
         "email",
         "displayName"
+      ]
+    },
+    "UserMandalaProgress": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserMandalaProgress",
+      "type": "object",
+      "description": "Represents a user's progress on a specific mandala path.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the mandala (e.g., 'agni')."
+        },
+        "level": {
+          "type": "number",
+          "description": "The current level the user has reached for this mandala."
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Whether the user has mastered this mandala path."
+        }
+      },
+      "required": [
+        "id",
+        "level"
       ]
     },
     "MandalaPuzzle": {
@@ -91,7 +108,7 @@
           "description": "English translation/meaning of the shloka."
         },
         "culturalFact": {
-          "type": "string",_
+          "type": "string",
           "description": "A cultural fact related to the mandala or its symbolism."
         }
       },
@@ -124,13 +141,33 @@
         }
       },
       {
+        "path": "/users/{userId}/mandalaProgress/{mandalaId}",
+        "definition": {
+          "entityName": "UserMandalaProgress",
+          "schema": {
+            "$ref": "#/backend/entities/UserMandalaProgress"
+          },
+          "description": "Stores a user's progress for a specific mandala path.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "mandalaId",
+              "description": "The ID of the mandala."
+            }
+          ]
+        }
+      },
+      {
         "path": "/mandalaPuzzles/{mandalaId}",
         "definition": {
           "entityName": "MandalaPuzzle",
           "schema": {
             "$ref": "#/backend/entities/MandalaPuzzle"
           },
-          "description": "Stores the data for each Mandala puzzle.",
+          "description": "Stores the data for each Mandala puzzle. (Now sourced from constants).",
           "params": [
             {
               "name": "mandalaId",

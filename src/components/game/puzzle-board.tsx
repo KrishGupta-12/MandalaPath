@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import type { Mandala } from '@/lib/types';
+import type { MandalaLevel } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, RotateCw } from 'lucide-react';
@@ -9,11 +9,12 @@ import { CulturalInsightDialog } from '@/components/game/cultural-insight-dialog
 import { Icons } from '../shared/icons';
 
 interface PuzzleBoardProps {
-  mandala: Mandala;
+  mandala: MandalaLevel;
+  onSolve: () => void;
 }
 
 // Generate a random, unsolved starting configuration
-const createInitialState = (mandala: Mandala): number[] => {
+const createInitialState = (mandala: MandalaLevel): number[] => {
   let initialState: number[];
   const isSolved = (state: number[]) => {
       for (let i = 0; i < mandala.rings - 1; i++) {
@@ -21,10 +22,10 @@ const createInitialState = (mandala: Mandala): number[] => {
         const rot2 = state[i+1];
         
         let isLinked = false;
-        // Get all indices of swastika symbol
-        const swastikaIndices1 = mandala.symbols.reduce((acc, symbol, index) => symbol === 'swastika' ? [...acc, index] : acc, [] as number[]);
+        // Get all indices of the link symbol
+        const linkSymbolIndices = mandala.symbols.reduce((acc, symbol, index) => symbol === 'logo' ? [...acc, index] : acc, [] as number[]);
         
-        for (const pos of swastikaIndices1) {
+        for (const pos of linkSymbolIndices) {
             if ((rot1 + pos) % mandala.segments === (rot2 + pos) % mandala.segments) {
                 isLinked = true;
                 break;
@@ -42,14 +43,14 @@ const createInitialState = (mandala: Mandala): number[] => {
 };
 
 
-export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
+export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   const [rotations, setRotations] = useState(() => createInitialState(mandala));
   const [isSolved, setIsSolved] = useState(false);
   const [moves, setMoves] = useState(0);
   const [isInsightOpen, setIsInsightOpen] = useState(false);
   
-  const swastikaPositions = useMemo(() => 
-    mandala.symbols.reduce((acc, symbol, index) => symbol === 'swastika' ? [...acc, index] : acc, [] as number[]),
+  const linkSymbolPositions = useMemo(() => 
+    mandala.symbols.reduce((acc, symbol, index) => symbol === 'logo' ? [...acc, index] : acc, [] as number[]),
   [mandala.symbols]);
 
   // Memoize which rings are linked to their inner neighbor
@@ -59,15 +60,15 @@ export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
     for (let i = 0; i < mandala.rings - 1; i++) {
         const rot1 = rotations[i];
         const rot2 = rotations[i+1];
-        for (const pos of swastikaPositions) {
+        for (const pos of linkSymbolPositions) {
             if ((rot1 + pos) % mandala.segments === (rot2 + pos) % mandala.segments) {
                 links[i] = true;
-                break; // Found a link for this pair, no need to check other swastikas
+                break; // Found a link for this pair
             }
         }
     }
     return links;
-  }, [rotations, mandala.rings, mandala.segments, swastikaPositions]);
+  }, [rotations, mandala.rings, mandala.segments, linkSymbolPositions]);
 
   useEffect(() => {
     // Check if all rings are linked
@@ -127,6 +128,11 @@ export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
     handleRotate(ringIndex, e.type === 'contextmenu' ? 'ccw' : 'cw');
   }
 
+  const handleCloseDialog = () => {
+    setIsInsightOpen(false);
+    onSolve();
+  }
+
   const resetGame = () => {
     setRotations(createInitialState(mandala));
     setIsSolved(false);
@@ -166,10 +172,10 @@ export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
               >
                 {Array.from({ length: mandala.segments }).map((_, segmentIndex) => {
                     const symbolAngle = (segmentIndex / mandala.segments) * 360;
-                    const isSwastika = mandala.symbols[segmentIndex] === 'swastika';
+                    const isLinkSymbol = mandala.symbols[segmentIndex] === 'logo';
                     const Icon = Icons[mandala.symbols[segmentIndex % mandala.symbols.length]];
                     
-                    const isLinkPoint = isSwastika && (
+                    const isLinkPoint = isLinkSymbol && (
                       (ringIndex > 0 && ringLinks[ringIndex-1]) || 
                       (ringIndex < mandala.rings - 1 && ringLinks[ringIndex])
                     );
@@ -229,7 +235,7 @@ export function PuzzleBoard({ mandala }: PuzzleBoardProps) {
       <CulturalInsightDialog 
         mandala={mandala} 
         isOpen={isInsightOpen} 
-        onClose={resetGame} 
+        onClose={handleCloseDialog}
       />
     </>
   );

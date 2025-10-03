@@ -1,56 +1,51 @@
 import { Mandala } from './types';
 
+// This defines the base configuration for each mandala path.
+// The number of rings will be determined by the user's progress for that mandala.
 export const MANDALAS: Mandala[] = [
   {
     id: 'agni',
     name: 'Mandala of Agni',
     imageId: 'mandala-agni',
-    unlocked: true,
-    rings: 3,
+    baseRings: 3,
+    maxRings: 6,
     segments: 8,
-    // The goal is to align the 'swastika' symbol.
-    // The visual logic is that the swastika symbol is at the halfway point of the segments.
-    solution: [0, 0, 0], 
-    symbols: ['fire', 'phoenix', 'fire', 'logo', 'swastika', 'phoenix', 'fire', 'logo'],
+    symbols: ['fire', 'phoenix', 'fire', 'phoenix', 'logo', 'phoenix', 'fire', 'phoenix'],
   },
   {
     id: 'jala',
     name: 'Mandala of Jala',
     imageId: 'mandala-jala',
-    unlocked: true,
-    rings: 4,
+    baseRings: 3,
+    maxRings: 7,
     segments: 8,
-    solution: [0, 0, 0, 0],
-    symbols: ['water', 'garuda', 'water', 'logo', 'swastika', 'garuda', 'water', 'logo'],
+    symbols: ['water', 'garuda', 'water', 'garuda', 'logo', 'garuda', 'water', 'garuda'],
   },
   {
     id: 'prithvi',
     name: 'Mandala of Prithvi',
     imageId: 'mandala-prithvi',
-    unlocked: true,
-    rings: 5,
+    baseRings: 3,
+    maxRings: 8,
     segments: 12,
-    solution: [0, 0, 0, 0, 0],
-    symbols: ['earth', 'logo', 'earth', 'logo', 'earth', 'logo', 'swastika', 'logo', 'earth', 'logo', 'earth', 'logo'],
+    symbols: ['earth', 'fire', 'earth', 'water', 'earth', 'air', 'logo', 'air', 'earth', 'water', 'earth', 'fire'],
   },
   {
     id: 'vayu',
     name: 'Mandala of Vayu',
     imageId: 'mandala-vayu',
-    unlocked: true,
-    rings: 5,
+    baseRings: 4,
+    maxRings: 9,
     segments: 12,
-    solution: [0, 0, 0, 0, 0],
-    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'logo', 'swastika', 'phoenix', 'air', 'garuda', 'air', 'logo'],
+    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'logo', 'air', 'phoenix', 'air', 'garuda', 'air', 'logo'],
   },
    {
     id: 'akasha',
     name: 'Mandala of Akasha',
     imageId: 'mandala-akasha',
-    unlocked: true,
-    rings: 6,
+    baseRings: 4,
+    maxRings: 10,
     segments: 12,
-    solution: [0,0,0,0,0,0],
-    symbols: ['logo', 'phoenix', 'logo', 'garuda', 'logo', 'swastika', 'logo', 'phoenix', 'logo', 'garuda', 'logo', 'swastika'],
+    symbols: ['fire', 'water', 'earth', 'air', 'phoenix', 'garuda', 'logo', 'garuda', 'phoenix', 'air', 'earth', 'water'],
   }
 ];

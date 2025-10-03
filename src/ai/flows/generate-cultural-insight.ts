@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const GenerateCulturalInsightInputSchema = z.object({
   mandalaName: z.string().describe('The name of the solved mandala.'),
+  level: z.number().describe('The level of the puzzle solved by the user.'),
 });
 export type GenerateCulturalInsightInput = z.infer<typeof GenerateCulturalInsightInputSchema>;
 
@@ -31,11 +32,17 @@ const prompt = ai.definePrompt({
   name: 'generateCulturalInsightPrompt',
   input: {schema: GenerateCulturalInsightInputSchema},
   output: {schema: GenerateCulturalInsightOutputSchema},
-  prompt: `You are a cultural expert specializing in providing insights related to mandalas.
+  prompt: `You are a cultural expert specializing in providing insights related to mandalas and Sanatana Dharma.
 
-  Based on the name of the solved mandala, generate a relevant cultural insight, which can be a Sanskrit shloka with English meaning or a cultural fact.
+  Based on the name of the solved mandala and the user's level, generate a relevant cultural insight. The insight can be a Sanskrit shloka with English meaning or a cultural fact.
+
+  The difficulty and depth of the insight should increase with the level.
+  - Level 1-2: Simple, well-known concepts or shlokas.
+  - Level 3-5: More detailed facts or less common shlokas.
+  - Level 6+: Deep, philosophical concepts from Vedas, Upanishads, or complex mythological stories.
 
   Mandala Name: {{{mandalaName}}}
+  Level: {{{level}}}
   `,
 });
 

@@ -11,11 +11,11 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader, AlertTriangle } from 'lucide-react';
-import type { Mandala } from '@/lib/types';
+import type { MandalaLevel } from '@/lib/types';
 import { Separator } from '../ui/separator';
 
 interface CulturalInsightDialogProps {
-  mandala: Mandala;
+  mandala: MandalaLevel;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -31,7 +31,7 @@ export function CulturalInsightDialog({ mandala, isOpen, onClose }: CulturalInsi
         setIsLoading(true);
         setError(null);
         try {
-          const result = await generateCulturalInsight({ mandalaName: mandala.name });
+          const result = await generateCulturalInsight({ mandalaName: mandala.name, level: mandala.level });
           setInsight(result.insight);
         } catch (e) {
           console.error('Failed to generate insight:', e);
@@ -42,7 +42,7 @@ export function CulturalInsightDialog({ mandala, isOpen, onClose }: CulturalInsi
       };
       fetchInsight();
     }
-  }, [isOpen, mandala.name]);
+  }, [isOpen, mandala.name, mandala.level]);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -60,7 +60,7 @@ export function CulturalInsightDialog({ mandala, isOpen, onClose }: CulturalInsi
           </DialogDescription>
         </DialogHeader>
         <Separator />
-        <div className="py-4">
+        <div className="py-4 min-h-[100px] flex items-center justify-center">
           {isLoading && (
             <div className="flex items-center justify-center space-x-2 text-muted-foreground">
               <Loader className="h-6 w-6 animate-spin text-primary" />
@@ -80,7 +80,7 @@ export function CulturalInsightDialog({ mandala, isOpen, onClose }: CulturalInsi
           )}
         </div>
         <DialogFooter>
-          <Button onClick={onClose} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold">Continue</Button>
+          <Button onClick={onClose} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold">Continue Your Path</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

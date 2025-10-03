@@ -6,7 +6,7 @@ import { useUser } from '@/firebase';
 import { UserNav } from '@/components/auth/user-nav';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Book, Crown, Puzzle } from 'lucide-react';
+import { Puzzle } from 'lucide-react';
 
 export function Header() {
   const { user } = useUser();

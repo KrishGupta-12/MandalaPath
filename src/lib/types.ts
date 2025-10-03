@@ -6,16 +6,31 @@ export interface UserProfile {
   email: string;
   displayName: string;
   photoURL?: string;
+  // This is deprecated in favor of the subcollection but kept for potential data migration.
   unlockedMandalaIds?: string[];
+}
+
+export interface UserMandalaProgress {
+  id: string; // Corresponds to the mandalaId (e.g., 'agni')
+  level: number;
 }
 
 export interface Mandala {
   id: string;
   name: string;
   imageId: string;
-  unlocked: boolean;
+  baseRings: number;
+  maxRings: number;
+  segments: number;
+  symbols: Icon[];
+}
+
+export interface MandalaLevel {
+  id: string; // e.g. 'agni-1'
+  mandalaId: string;
+  name: string;
+  level: number;
   rings: number;
   segments: number;
-  solution: number[];
   symbols: Icon[];
 }
