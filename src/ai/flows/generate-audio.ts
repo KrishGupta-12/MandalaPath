@@ -48,33 +48,39 @@ export const generateAudioFlow = ai.defineFlow(
         return '';
     }
 
-    const ttsModel = googleAI.model('gemini-2.5-flash-preview-tts');
+    try {
+        const ttsModel = googleAI.model('gemini-2.5-flash-preview-tts');
 
-    const { media } = await ai.generate({
-        model: ttsModel,
-        config: {
-          responseModalities: ['AUDIO'],
-          speechConfig: {
-            voiceConfig: {
-              prebuiltVoiceConfig: { voiceName: 'Algenib' },
+        const { media } = await ai.generate({
+            model: ttsModel,
+            config: {
+              responseModalities: ['AUDIO'],
+              speechConfig: {
+                voiceConfig: {
+                  prebuiltVoiceConfig: { voiceName: 'Algenib' },
+                },
+              },
             },
-          },
-        },
-        prompt: text,
-      });
+            prompt: text,
+          });
 
-    if (!media) {
-      throw new Error('No audio media was generated.');
+        if (!media) {
+            console.warn('No audio media was generated for the provided text.');
+            return '';
+        }
+        
+        const audioBuffer = Buffer.from(
+            media.url.substring(media.url.indexOf(',') + 1),
+            'base64'
+        );
+          
+        const wavBase64 = await toWav(audioBuffer);
+
+        return `data:audio/wav;base64,${wavBase64}`;
+    } catch (error) {
+        console.error('Error generating audio:', error);
+        return ''; // Return an empty string on error to prevent crashes
     }
-    
-    const audioBuffer = Buffer.from(
-        media.url.substring(media.url.indexOf(',') + 1),
-        'base64'
-    );
-      
-    const wavBase64 = await toWav(audioBuffer);
-
-    return `data:audio/wav;base64,${wavBase64}`;
   }
 );
 
