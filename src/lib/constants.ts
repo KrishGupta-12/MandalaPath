@@ -76,3 +76,18 @@ export const MANDALAS: Mandala[] = [
     symbols: ['trishul', 'lotus', 'trishul', 'logo', 'trishul', 'lotus', 'trishul', 'logo', 'trishul', 'lotus', 'trishul', 'logo'],
   }
 ];
+
+// Player Titles based on total levels completed
+export const PLAYER_TITLES = {
+  NOVICE: 'Mandala Novice',
+  SEEKER: 'Dharma Seeker',
+  GUARDIAN: 'Gita Guardian',
+  ENLIGHTENED: 'Enlightened Soul',
+};
+
+export const getTitleByLevel = (totalLevel: number): string => {
+  if (totalLevel >= 20) return PLAYER_TITLES.ENLIGHTENED;
+  if (totalLevel >= 10) return PLAYER_TITLES.GUARDIAN;
+  if (totalLevel >= 5) return PLAYER_TITLES.SEEKER;
+  return PLAYER_TITLES.NOVICE;
+};
