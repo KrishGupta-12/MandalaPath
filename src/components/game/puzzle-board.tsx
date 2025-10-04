@@ -167,14 +167,6 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
     <>
       <div className="w-full flex flex-col items-center justify-center p-2 flex-grow">
         
-        {/* Header Section */}
-        <div className="text-center w-full mb-4">
-             <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
-                {mandala.name}
-            </h1>
-            <p className="text-foreground/80">Level {mandala.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
-        </div>
-
         {/* Dedicated, Responsive Puzzle Board Container */}
         <div ref={boardContainerRef} className="w-full flex-grow flex items-center justify-center">
           <div className="relative" style={{ width: boardSize, height: boardSize }}>
