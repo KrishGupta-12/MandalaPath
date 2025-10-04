@@ -46,17 +46,23 @@ function PlayClientPage() {
   }, [mandalaId, router]);
 
   useEffect(() => {
+    // Wait until the loading of user progress is complete.
     if (isLoadingProgress) {
         return; 
     }
 
-    if (!userProgress && userProgressRef) {
-        // First time playing this mandala, create the doc
-        setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
-        setCurrentLevel(1);
-    } else if (userProgress) {
+    if (userProgress) {
+        // If progress exists, set the level from the loaded data.
+        // If mandala is completed, reset to level 1 for replay.
         const startLevel = userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level;
         setCurrentLevel(startLevel);
+    } else if (userProgressRef) {
+        // If no progress doc exists after loading, this is the first time playing this mandala.
+        // Create the document for level 1.
+        setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId! }, { merge: false });
+        // The useDoc hook will automatically pick up the newly created document and trigger a re-render.
+        // We set the level locally to 1 to avoid waiting for the next render cycle.
+        setCurrentLevel(1);
     }
   }, [isLoadingProgress, userProgress, userProgressRef, mandalaId]);
 
@@ -101,7 +107,7 @@ function PlayClientPage() {
     return (
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-center">
-          <p>Loading Game...</p>
+          <p>Loading Your Sacred Path...</p>
         </div>
       </div>
     );
@@ -109,19 +115,30 @@ function PlayClientPage() {
 
   return (
     <div className="container mx-auto py-4 h-[calc(100vh-4rem)] flex flex-col items-center">
-      <div className="w-full flex items-center justify-between mb-2">
-          <Button asChild variant="ghost" size="sm" className="self-start">
-              <Link href="/dashboard" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
-                  <ChevronLeft className="w-4 h-4 mr-1" />
-                  Back to Dashboard
-              </Link>
-          </Button>
+        <div className="w-full flex items-center justify-between mb-2">
+            <Button asChild variant="ghost" size="sm" className="self-start">
+                <Link href="/dashboard" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Back to Dashboard
+                </Link>
+            </Button>
+        </div>
+        <div className="w-full flex flex-col items-center justify-center p-2 flex-grow">
+        
+            {/* Header Section */}
+            <div className="text-center w-full mb-4">
+                <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
+                    {mandalaLevel.name}
+                </h1>
+                <p className="text-foreground/80">Level {mandalaLevel.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
+            </div>
+
+            <PuzzleBoard 
+                key={mandalaLevel.id} // Key ensures component re-mounts on level change
+                mandala={mandalaLevel} 
+                onSolve={handlePuzzleSolved}
+            />
       </div>
-      <PuzzleBoard 
-        key={mandalaLevel.id} // Key ensures component re-mounts on level change
-        mandala={mandalaLevel} 
-        onSolve={handlePuzzleSolved}
-      />
     </div>
   );
 }
