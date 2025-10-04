@@ -34,19 +34,32 @@ function PlayClientPage() {
   const [currentLevel, setCurrentLevel] = useState<number | null>(null);
 
   useEffect(() => {
-    if (isLoadingProgress) return;
+    if (!isUserLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isUserLoading, router]);
 
-    if (userProgress) {
+  useEffect(() => {
+    if (!mandalaId) {
+      router.push('/dashboard');
+    }
+  }, [mandalaId, router]);
+
+  useEffect(() => {
+    // Only set the level when progress is loaded
+    if (!isLoadingProgress && userProgress) {
         // If user has completed all levels, they can replay from level 1.
         // Otherwise, start them on their current saved level.
         const startLevel = userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level;
         setCurrentLevel(startLevel);
-    } else if (userProgressRef && mandalaId) {
-        // If no progress doc exists, create one starting at level 1.
+    } else if (!isLoadingProgress && !userProgress && userProgressRef) {
+        // This case handles a new player starting a mandala for the first time.
+        // If no progress doc exists after loading, create one starting at level 1.
         setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
         setCurrentLevel(1);
     }
-  }, [userProgress, isLoadingProgress, userProgressRef, mandalaId]);
+    // Intentionally not running when userProgress is still loading.
+  }, [isLoadingProgress, userProgress, userProgressRef, mandalaId]);
 
 
   const mandalaLevel: MandalaLevel | null = useMemo(() => {
@@ -85,19 +98,7 @@ function PlayClientPage() {
   };
 
 
-  useEffect(() => {
-    if (!isUserLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, isUserLoading, router]);
-
-  useEffect(() => {
-    if (!mandalaId) {
-      router.push('/dashboard');
-    }
-  }, [mandalaId, router]);
-
-  if (isUserLoading || !user || isLoadingProgress || !mandalaLevel || !mandalaConfig || currentLevel === null) {
+  if (isUserLoading || !user || currentLevel === null || !mandalaLevel || !mandalaConfig) {
     return (
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-center">

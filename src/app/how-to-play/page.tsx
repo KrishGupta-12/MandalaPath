@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, BrainCircuit, Mouse, MoveUp, Puzzle, Smartphone } from 'lucide-react';
+import { BookOpen, BrainCircuit, Mouse, MoveUp, Puzzle, Smartphone, Touchpad } from 'lucide-react';
 import React from 'react';
 
 export default function HowToPlayPage() {
@@ -81,18 +81,18 @@ export default function HowToPlayPage() {
         <Card>
             <CardHeader>
                  <div className="flex items-center gap-3">
-                    <Smartphone className="w-8 h-8 text-primary" />
+                    <Touchpad className="w-8 h-8 text-primary" />
                     <CardTitle className="font-headline text-2xl text-primary">Mobile Controls</CardTitle>
                 </div>
             </CardHeader>
             <CardContent className="space-y-4">
                  <div>
                     <h4 className="font-semibold">Rotate Clockwise:</h4>
-                    <p className="text-foreground/80"><span className="font-bold text-accent">Tap</span> on any ring to rotate it clockwise.</p>
+                    <p className="text-foreground/80"><span className="font-bold text-accent">Single-Tap</span> on any ring.</p>
                 </div>
                  <div>
                     <h4 className="font-semibold">Rotate Counter-Clockwise:</h4>
-                    <p className="text-foreground/80"><span className="font-bold text-accent">Long-press</span> on any ring to rotate it counter-clockwise.</p>
+                    <p className="text-foreground/80"><span className="font-bold text-accent">Double-Tap</span> on any ring.</p>
                 </div>
             </CardContent>
         </Card>
