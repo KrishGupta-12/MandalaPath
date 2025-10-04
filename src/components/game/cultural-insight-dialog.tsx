@@ -82,12 +82,16 @@ export function CulturalInsightDialog({ mandala, isOpen, onClose }: CulturalInsi
     setAudioError(null);
     try {
       const audioDataUrl = await generateAudio(insight);
-      setAudioUrl(audioDataUrl);
-      const player = new Audio(audioDataUrl);
-      setAudioPlayer(player);
-      player.play();
-      setIsPlaying(true);
-      player.onended = () => setIsPlaying(false);
+      if (audioDataUrl) {
+        setAudioUrl(audioDataUrl);
+        const player = new Audio(audioDataUrl);
+        setAudioPlayer(player);
+        player.play();
+        setIsPlaying(true);
+        player.onended = () => setIsPlaying(false);
+      } else {
+        setAudioError('Could not generate audio.');
+      }
     } catch (e) {
       console.error('Failed to generate audio:', e);
       setAudioError('Could not generate audio.');

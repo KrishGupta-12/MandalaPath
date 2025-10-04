@@ -45,7 +45,7 @@ const createInitialState = (mandala: MandalaLevel): number[] => {
 export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   const [rotations, setRotations] = useState(() => createInitialState(mandala));
   const [isSolved, setIsSolved] = useState(false);
-  const [prana, setPrana] = useState(0);
+  const [prana, setPrana] = useState(mandala.rings * mandala.level * 3);
   const [isInsightOpen, setIsInsightOpen] = useState(false);
 
   const boardContainerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   }, []);
 
   const handleRotate = (ringIndex: number, direction: 'cw' | 'ccw') => {
-    if (isSolved) return;
+    if (isSolved || prana <= 0) return;
   
     setRotations(prevRotations => {
       const newRotations = [...prevRotations];
@@ -117,7 +117,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   
       return newRotations;
     });
-    setPrana(prev => prev + 1);
+    setPrana(prev => prev - 1);
   };
   
   const handleTouchStart = (ringIndex: number) => {
@@ -142,7 +142,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   const resetGame = () => {
     setRotations(createInitialState(mandala));
     setIsSolved(false);
-    setPrana(0);
+    setPrana(mandala.rings * mandala.level * 3);
     setIsInsightOpen(false);
   };
 

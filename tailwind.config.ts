@@ -110,6 +110,13 @@ export default {
         'mandala-glow': 'mandala-glow 2s ease-in-out infinite',
         'spin-slow': 'spin-slow 60s linear infinite',
       },
+      fontSize: {
+        'base': '1.1rem',
+        'sm': '1rem'
+      },
+      h1: {
+        'fontSize': '3rem',
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],
