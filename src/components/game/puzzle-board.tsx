@@ -95,7 +95,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         if (parent) {
             const parentWidth = parent.clientWidth;
             const parentHeight = parent.clientHeight;
-            const size = Math.min(parentWidth, parentHeight) * 0.9;
+            const size = Math.min(parentWidth, parentHeight) * 0.8; // Reduced from 0.9 to 0.8
             setBoardSize(size);
         }
       }
