@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MANDALAS, TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
-import { doc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import type { UserMandalaProgress } from '@/lib/types';
 
 function PlayClientPage() {
@@ -86,7 +86,7 @@ function PlayClientPage() {
   }, [mandalaConfig, currentLevel]);
 
   const handlePuzzleSolved = async () => {
-      if (!user || !mandalaId || !userProgressRef || !currentLevel || !mandalaConfig) return;
+      if (!user || !mandalaId || !userProgressRef || !currentLevel || !mandalaConfig || !firestore) return;
       
       const nextLevel = currentLevel + 1;
        
@@ -95,8 +95,9 @@ function PlayClientPage() {
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Update local state to re-render puzzle
        } else {
-            // Mark as completed (level > total levels)
-            setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
+            // Mark as completed (level > total levels).
+            // CRITICAL: Await this write to ensure progress is saved before redirecting.
+            await setDoc(userProgressRef, { level: nextLevel }, { merge: true });
             // Redirect to dashboard to choose next mandala
             router.push('/dashboard');
        }
@@ -123,16 +124,14 @@ function PlayClientPage() {
                 </Link>
             </Button>
         </div>
+         {/* Header Section */}
+        <div className="text-center w-full mb-4">
+            <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
+                {mandalaLevel.name}
+            </h1>
+            <p className="text-foreground/80">Level {mandalaLevel.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
+        </div>
         <div className="w-full flex flex-col items-center justify-center p-2 flex-grow">
-        
-            {/* Header Section */}
-            <div className="text-center w-full mb-4">
-                <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
-                    {mandalaLevel.name}
-                </h1>
-                <p className="text-foreground/80">Level {mandalaLevel.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
-            </div>
-
             <PuzzleBoard 
                 key={mandalaLevel.id} // Key ensures component re-mounts on level change
                 mandala={mandalaLevel} 

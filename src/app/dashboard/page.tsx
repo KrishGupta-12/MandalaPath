@@ -89,13 +89,13 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {(isLoadingMandalas || isLoadingProgress) ? (
             Array.from({ length: 8 }).map((_, i) => (
-                <Card key={i}>
+                <Card key={i} className="flex flex-col">
                     <Skeleton className="aspect-square w-full" />
                     <CardHeader className='p-4'>
                        <Skeleton className="h-6 w-3/4" />
                        <Skeleton className="h-4 w-1/2" />
                     </CardHeader>
-                    <CardContent className="p-4">
+                    <CardContent className="p-4 flex-grow">
                         <Skeleton className="h-4 w-full mb-2" />
                         <Skeleton className="h-2 w-full" />
                     </CardContent>
@@ -141,22 +141,22 @@ export default function DashboardPage() {
                   <CardDescription className="text-sm h-10 text-foreground/80">{mandala.description}</CardDescription>
                 </div>
                 
-                <div className='flex-grow mt-2'>
+                <div className='mt-auto pt-2'>
                   <Progress value={isCompleted ? 100 : progressPercentage} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-1">
                     {isCompleted ? 'Completed' : `Level ${currentLevel} / ${TOTAL_LEVELS_PER_MANDALA}`}
                   </p>
                 </div>
                 
-                <CardFooter className="p-0 pt-4">
-                  <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold" disabled={isLocked}>
-                    <Link href={isLocked ? '#' : `/play?mandala=${mandala.id}`} aria-disabled={isLocked} tabIndex={isLocked ? -1 : undefined} className={cn(isLocked && "pointer-events-none")}>
-                      <Play className="mr-2 h-4 w-4" />
-                      {isCompleted ? 'Play Again' : 'Play'}
-                    </Link>
-                  </Button>
-                </CardFooter>
               </div>
+              <CardFooter className="p-4 pt-4">
+                <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold" disabled={isLocked}>
+                  <Link href={isLocked ? '#' : `/play?mandala=${mandala.id}`} aria-disabled={isLocked} tabIndex={isLocked ? -1 : undefined} className={cn(isLocked && "pointer-events-none")}>
+                    <Play className="mr-2 h-4 w-4" />
+                    {isCompleted ? 'Play Again' : 'Play'}
+                  </Link>
+                </Button>
+              </CardFooter>
             </Card>
           );
         }))}
