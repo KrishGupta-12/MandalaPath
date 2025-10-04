@@ -52,7 +52,7 @@ export default function HowToPlayPage() {
               </div>
               <div>
                 <h3 className="text-xl font-headline font-semibold">4. Unlock Ancient Wisdom</h3>
-                <p className="text-foreground/70 mt-1">Solving a puzzle rewards you with a profound insight from Hindu scriptures. Completing all 9 levels of a mandala earns you a new title, marking your progress on the path to enlightenment.</p>
+                <p className="text-foreground/70 mt-1">Solving a puzzle rewards you with a profound insight from Hindu scriptures. Completing a full mandala earns you a new title, marking your progress on the path to enlightenment.</p>
               </div>
             </div>
           </CardContent>
@@ -91,8 +91,8 @@ export default function HowToPlayPage() {
                     <p className="text-foreground/80"><span className="font-bold text-accent">Tap</span> on any ring to rotate it clockwise.</p>
                 </div>
                  <div>
-                    <h4 className="font-semibold">Counter-Clockwise:</h4>
-                    <p className="text-foreground/80">Bi-directional rotation on mobile is planned for a future update. For now, rotation is clockwise only.</p>
+                    <h4 className="font-semibold">Rotate Counter-Clockwise:</h4>
+                    <p className="text-foreground/80"><span className="font-bold text-accent">Long-press</span> on any ring to rotate it counter-clockwise.</p>
                 </div>
             </CardContent>
         </Card>
