@@ -44,7 +44,10 @@ export const generateAudioFlow = ai.defineFlow(
     outputSchema: z.string(),
   },
   async (text) => {
-    if (!text) {
+    // Sanitize and validate input text
+    const sanitizedText = text.replace(/["“”]/g, '').trim();
+    if (!sanitizedText) {
+        console.warn('Audio generation skipped: Input text is empty after sanitization.');
         return '';
     }
 
@@ -61,7 +64,7 @@ export const generateAudioFlow = ai.defineFlow(
                 },
               },
             },
-            prompt: text,
+            prompt: sanitizedText, // Use sanitized text
           });
 
         if (!media) {
@@ -78,7 +81,7 @@ export const generateAudioFlow = ai.defineFlow(
 
         return `data:audio/wav;base64,${wavBase64}`;
     } catch (error) {
-        console.error('Error generating audio:', error);
+        console.error('Error in generateAudioFlow:', error);
         return ''; // Return an empty string on error to prevent crashes
     }
   }
