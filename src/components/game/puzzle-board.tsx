@@ -49,6 +49,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   const [isInsightOpen, setIsInsightOpen] = useState(false);
 
   const boardContainerRef = useRef<HTMLDivElement>(null);
+  const longPressTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [boardSize, setBoardSize] = useState(500);
 
   const linkSymbolPositions = useMemo(() =>
@@ -118,6 +119,20 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
     });
     setPrana(prev => prev + 1);
   };
+  
+  const handleTouchStart = (ringIndex: number) => {
+    longPressTimeoutRef.current = setTimeout(() => {
+      handleRotate(ringIndex, 'ccw');
+      longPressTimeoutRef.current = null; // Mark as handled
+    }, 500); // 500ms for a long press
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimeoutRef.current) {
+      clearTimeout(longPressTimeoutRef.current);
+      longPressTimeoutRef.current = null;
+    }
+  };
 
   const handleCloseDialog = () => {
     setIsInsightOpen(false);
@@ -168,13 +183,23 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
                     width: `${currentRadius * 2}px`,
                     height: `${currentRadius * 2}px`,
                     transform: `translate(-50%, -50%) rotate(${(rotation / mandala.segments) * 360}deg)`,
-                    cursor: isSolved ? 'default' : 'pointer'
+                    cursor: isSolved ? 'default' : 'pointer',
+                    zIndex: mandala.rings - ringIndex, // Higher z-index for inner rings
                   }}
-                  onClick={() => handleRotate(ringIndex, 'cw')}
+                  onClick={(e) => {
+                    // Prevent click if long-press was handled
+                    if (longPressTimeoutRef.current !== null) {
+                      e.preventDefault();
+                      handleRotate(ringIndex, 'cw');
+                    }
+                  }}
                   onContextMenu={(e) => {
                       e.preventDefault();
                       handleRotate(ringIndex, 'ccw');
                   }}
+                  onTouchStart={() => handleTouchStart(ringIndex)}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchMove={handleTouchEnd} // Cancel on drag
                 >
                   {Array.from({ length: mandala.segments }).map((_, segmentIndex) => {
                     const symbolAngle = (segmentIndex / mandala.segments) * 360;
