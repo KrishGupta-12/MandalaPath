@@ -95,7 +95,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         if (parent) {
             const parentWidth = parent.clientWidth;
             const parentHeight = parent.clientHeight;
-            const size = Math.min(parentWidth, parentHeight) * 0.8; // Reduced from 0.9 to 0.8
+            const size = Math.min(parentWidth, parentHeight) * 0.8; // Use 80% of the smallest dimension
             setBoardSize(size);
         }
       }
@@ -121,6 +121,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   };
 
   const handleRingClick = (ringIndex: number) => {
+    // This logic handles single and double taps for mobile
     if (clickTimeoutRef.current) {
       // This is a double tap/click
       clearTimeout(clickTimeoutRef.current);
@@ -164,8 +165,10 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
 
   return (
     <>
-      <div className="w-full flex-grow flex flex-col items-center justify-center p-2 relative">
-        <div className="text-center absolute top-0 w-full">
+      <div className="w-full flex flex-col items-center justify-center p-2 flex-grow">
+        
+        {/* Header Section */}
+        <div className="text-center w-full mb-4">
              <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
                 {mandala.name}
             </h1>
@@ -243,7 +246,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         </div>
 
         {/* Controls and Stats */}
-        <div className="w-full max-w-sm flex flex-col items-center gap-4">
+        <div className="w-full max-w-sm flex flex-col items-center gap-4 mt-4">
           <div className="w-full grid grid-cols-2 gap-4">
             <div className="text-center p-3 rounded-lg bg-card border">
               <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><HeartPulse className="w-3 h-3" />PRANA</p>
