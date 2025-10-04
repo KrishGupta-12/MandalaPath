@@ -30,7 +30,7 @@ export const Icons = {
     </svg>
   ),
   air: (props: SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
         <path d="M17.7 7.7a2.5 2.5 0 1 1-3.54 3.54l-1.6-1.6"/><path d="M6.2 16.2a2.5 2.5 0 1 1 3.54-3.54l1.6 1.6"/><path d="M2 12h12.5"/><path d="M22 12h-5"/>
     </svg>
   ),
@@ -42,6 +42,19 @@ export const Icons = {
   garuda: (props: SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
         <path d="M12 2L6 8l-4 4 2 6 8-4 8 4 2-6-4-4-6-6z"/><path d="M12 12l-2 4h4l-2-4z"/>
+    </svg>
+  ),
+  lotus: (props: SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M8 16.3A6.2 6.2 0 0 0 12 5a6.2 6.2 0 0 0 4 11.3"/>
+        <path d="M12 21a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Z"/>
+        <path d="M6.7 19.3A2 2 0 0 0 10 17H4.3A2 2 0 0 0 6.7 19.3Z"/>
+        <path d="M17.3 19.3A2 2 0 0 0 19.7 17H14a2 2 0 0 0 3.3 2.3Z"/>
+    </svg>
+  ),
+  trishul: (props: SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M12 22V8"/><path d="M5 8h14"/><path d="M12 8a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v0a2 2 0 0 0-2-2Z"/><path d="M5 5v3"/><path d="M19 5v3"/>
     </svg>
   )
 };

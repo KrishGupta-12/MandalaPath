@@ -33,17 +33,13 @@ function PlayClientPage() {
   const [currentLevel, setCurrentLevel] = useState<number | null>(null);
 
   useEffect(() => {
-    // This effect now correctly handles setting the level based on loaded data.
-    if (!isLoadingProgress) {
-        if (userProgress) {
-            // Progress exists, use the level from Firestore.
-            setCurrentLevel(userProgress.level);
-        } else if (userProgressRef && mandalaId) {
-            // No progress document exists for this user and mandala, so create it for Level 1.
-            // This is the correct entry point for a new player or a new mandala.
-            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
-            setCurrentLevel(1);
-        }
+    if (isLoadingProgress) return;
+
+    if (userProgress) {
+        setCurrentLevel(userProgress.level);
+    } else if (userProgressRef && mandalaId) {
+        setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
+        setCurrentLevel(1);
     }
   }, [userProgress, isLoadingProgress, userProgressRef, mandalaId]);
 
@@ -73,13 +69,10 @@ function PlayClientPage() {
       const totalLevels = 9;
        
        if (nextLevel <= totalLevels) {
-            // User progresses to the next level.
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
-            setCurrentLevel(nextLevel); // Optimistically update level for immediate re-render
+            setCurrentLevel(nextLevel);
        } else {
-            // After completing the final level (9), reset to level 1 for replayability.
             setDocumentNonBlocking(userProgressRef, { level: 1 }, { merge: true });
-            // Show the final dialog, then optimistically update the local level to 1 after a short delay.
             setTimeout(() => setCurrentLevel(1), 500); 
        }
   };
@@ -108,19 +101,20 @@ function PlayClientPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 flex flex-col items-center">
-        <div className="w-full max-w-2xl mb-4">
-            <Button asChild variant="ghost">
+    <div className="container mx-auto py-4 h-[calc(100vh-4rem)] flex flex-col items-center">
+        <div className="w-full max-w-2xl mb-2 flex items-center justify-between">
+            <Button asChild variant="ghost" size="sm">
                 <Link href="/dashboard" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
                     <ChevronLeft className="w-4 h-4 mr-1" />
-                    Back to Dashboard
+                    Back
                 </Link>
             </Button>
+             <h1 className="text-xl md:text-2xl font-headline font-bold text-primary text-center">
+                {mandalaLevel.name}
+            </h1>
+            <div className="w-16"></div>
         </div>
-      <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary mb-2">
-        {mandalaLevel.name}
-      </h1>
-      <p className="text-foreground/80 mb-8 max-w-lg text-center">Align the central symbols between adjacent rings to link them all.</p>
+      <p className="text-foreground/80 mb-4 max-w-lg text-center text-sm">Align all 'logo' symbols to restore the mandala.</p>
       <PuzzleBoard 
         key={mandalaLevel.id} 
         mandala={mandalaLevel} 

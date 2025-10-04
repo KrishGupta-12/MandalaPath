@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import type { MandalaLevel } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, RotateCw } from 'lucide-react';
+import { RotateCcw, HeartPulse } from 'lucide-react';
 import { CulturalInsightDialog } from '@/components/game/cultural-insight-dialog';
 import { Icons } from '../shared/icons';
 
@@ -46,42 +46,62 @@ const createInitialState = (mandala: MandalaLevel): number[] => {
 export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   const [rotations, setRotations] = useState(() => createInitialState(mandala));
   const [isSolved, setIsSolved] = useState(false);
-  const [moves, setMoves] = useState(0);
+  const [prana, setPrana] = useState(0);
   const [isInsightOpen, setIsInsightOpen] = useState(false);
   
+  const boardRef = useRef<HTMLDivElement>(null);
+  const [boardSize, setBoardSize] = useState(500);
+
   const linkSymbolPositions = useMemo(() => 
     mandala.symbols.reduce((acc, symbol, index) => symbol === 'logo' ? [...acc, index] : acc, [] as number[]),
   [mandala.symbols]);
 
-  // Memoize which rings are linked to their inner neighbor
+  // Ring links based on rotation
   const ringLinks = useMemo(() => {
     const links = Array(mandala.rings - 1).fill(false);
-
     for (let i = 0; i < mandala.rings - 1; i++) {
         const rot1 = rotations[i];
         const rot2 = rotations[i+1];
         for (const pos of linkSymbolPositions) {
             if ((rot1 + pos) % mandala.segments === (rot2 + pos) % mandala.segments) {
                 links[i] = true;
-                break; // Found a link for this pair
+                break;
             }
         }
     }
     return links;
   }, [rotations, mandala.rings, mandala.segments, linkSymbolPositions]);
-
+  
+  // Solved state check
   useEffect(() => {
-    // Check if all rings are linked
     if (ringLinks.every(isLinked => isLinked)) {
-      setTimeout(() => setIsSolved(true), 500); // Delay for the final glow animation
+      setTimeout(() => setIsSolved(true), 500); 
     }
   }, [ringLinks]);
   
+  // Post-solve dialog
   useEffect(() => {
       if(isSolved) {
           setTimeout(() => setIsInsightOpen(true), 1000);
       }
   }, [isSolved]);
+
+  // Mobile responsiveness
+  useEffect(() => {
+    const updateSize = () => {
+      if (boardRef.current) {
+        const parentWidth = boardRef.current.offsetWidth;
+        const parentHeight = boardRef.current.offsetHeight;
+        const size = Math.min(parentWidth, parentHeight, 500); // Max size of 500px
+        setBoardSize(size);
+      }
+    };
+    
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
 
   const getLinkedGroup = (ringIndex: number): number[] => {
       const group: number[] = [ringIndex];
@@ -119,10 +139,10 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
       
       return newRotations;
     });
-    setMoves(prev => prev + 1);
+    setPrana(prev => prev + 1);
   };
   
-    const handleRingClick = (e: React.MouseEvent, ringIndex: number) => {
+  const handleRingClick = (e: React.MouseEvent, ringIndex: number) => {
     if (isSolved) return;
     e.preventDefault();
     handleRotate(ringIndex, e.type === 'contextmenu' ? 'ccw' : 'cw');
@@ -136,17 +156,20 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   const resetGame = () => {
     setRotations(createInitialState(mandala));
     setIsSolved(false);
-    setMoves(0);
+    setPrana(0);
     setIsInsightOpen(false);
   }
 
-  const ringRadius = (ringIndex: number) => 50 + ringIndex * 35;
+  const ringGap = boardSize / (mandala.rings * 2.5);
+  const ringRadius = (ringIndex: number) => (boardSize / 3.5) + (ringIndex * ringGap);
+  const symbolSize = Math.max(16, Math.min(24, ringGap * 0.8));
+
 
   return (
     <>
-      <div className="w-full max-w-4xl flex flex-col md:flex-row items-center justify-center gap-8">
-        {/* Puzzle Board */}
-        <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] flex items-center justify-center">
+      <div className="w-full flex-grow flex flex-col items-center justify-center gap-4 md:gap-8 p-2">
+        {/* Responsive Puzzle Board Container */}
+        <div ref={boardRef} className="relative flex-grow w-full max-w-[500px] h-auto aspect-square flex items-center justify-center">
           {rotations.map((rotation, ringIndex) => {
             const isFirstRing = ringIndex === 0;
             const isLinkedToInner = !isFirstRing && ringLinks[ringIndex-1];
@@ -157,9 +180,9 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
               <div
                 key={ringIndex}
                 className={cn(
-                    "absolute rounded-full border border-transparent transition-all duration-300",
+                    "absolute rounded-full border border-primary/20 transition-all duration-500",
                     isSolved && "animate-pulse",
-                    {"shadow-[0_0_20px_theme(colors.accent.DEFAULT)]": isSolved || isFullyLinked },
+                    {"shadow-[0_0_20px_theme(colors.accent.DEFAULT)] border-accent": isSolved || isFullyLinked },
                 )}
                 style={{
                   width: `${ringRadius(ringIndex) * 2}px`,
@@ -172,10 +195,9 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
               >
                 {Array.from({ length: mandala.segments }).map((_, segmentIndex) => {
                     const symbolAngle = (segmentIndex / mandala.segments) * 360;
-                    const isLinkSymbol = mandala.symbols[segmentIndex] === 'logo';
                     const Icon = Icons[mandala.symbols[segmentIndex % mandala.symbols.length]];
                     
-                    const isLinkPoint = isLinkSymbol && (
+                    const isLinkPoint = mandala.symbols[segmentIndex] === 'logo' && (
                       (ringIndex > 0 && ringLinks[ringIndex-1]) || 
                       (ringIndex < mandala.rings - 1 && ringLinks[ringIndex])
                     );
@@ -186,13 +208,17 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
                       className="absolute w-full h-full"
                       style={{ transform: `rotate(${symbolAngle}deg)` }}
                     >
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center">
+                      <div className="absolute top-[-1px] left-1/2 -translate-x-1/2 flex items-center justify-center" style={{ width: symbolSize, height: symbolSize }}>
                          <Icon className={cn(
-                             "w-6 h-6 text-primary transition-colors duration-300",
+                             "text-primary transition-colors duration-300",
                               isLinkPoint && "text-accent",
                               isSolved && "text-accent"
                             )} 
-                            style={{ transform: `rotate(${-symbolAngle - (rotation / mandala.segments) * 360}deg)` }}
+                            style={{ 
+                              width: symbolSize, 
+                              height: symbolSize,
+                              transform: `rotate(${-symbolAngle - (rotation / mandala.segments) * 360}deg)` 
+                            }}
                           />
                       </div>
                     </div>
@@ -204,32 +230,17 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         </div>
 
         {/* Controls and Stats */}
-        <div className="w-full md:w-64 flex flex-col gap-4">
-            <div className="text-center p-4 rounded-lg bg-card border">
-                <p className="text-sm text-muted-foreground">Moves</p>
-                <p className="text-4xl font-bold text-primary">{moves}</p>
+        <div className="w-full max-w-sm flex flex-col items-center gap-4">
+            <div className="w-full grid grid-cols-2 gap-4">
+              <div className="text-center p-3 rounded-lg bg-card border">
+                  <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><HeartPulse className="w-3 h-3"/>PRANA</p>
+                  <p className="text-2xl font-bold text-primary">{prana}</p>
+              </div>
+              <Button onClick={resetGame} variant="outline" className="w-full h-full text-base">
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Reset
+              </Button>
             </div>
-            <div className="flex flex-col gap-2">
-                {rotations.map((_, ringIndex) => {
-                    return (
-                        <div key={ringIndex} className="flex items-center justify-between p-2 rounded-lg bg-card border">
-                            <span className={cn("font-medium text-foreground")}>Ring {ringIndex + 1}</span>
-                            <div className="flex gap-1">
-                                <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleRotate(ringIndex, 'ccw')} disabled={isSolved}>
-                                    <RotateCcw className="w-5 h-5" />
-                                </Button>
-                                <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleRotate(ringIndex, 'cw')} disabled={isSolved}>
-                                    <RotateCw className="w-5 h-5" />
-                                </Button>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-             <Button onClick={resetGame} variant="outline" className="w-full">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Reset Puzzle
-            </Button>
         </div>
       </div>
       <CulturalInsightDialog 
