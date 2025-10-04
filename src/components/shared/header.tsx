@@ -14,7 +14,7 @@ export function Header() {
 
   const navItems = [
     { href: '/dashboard', label: 'Play', icon: Puzzle },
-    { href: '/#how-to-play', label: 'How to Play', icon: BookOpen },
+    { href: '/how-to-play', label: 'How to Play', icon: BookOpen },
   ];
 
   return (

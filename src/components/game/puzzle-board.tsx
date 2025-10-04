@@ -9,17 +9,22 @@ import { CulturalInsightDialog } from '@/components/game/cultural-insight-dialog
 import { Icons } from '../shared/icons';
 import { TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 
+interface PuzzleBoardProps {
+    mandala: MandalaLevel;
+    onSolve: () => void;
+}
+
 // Generate a random, unsolved starting configuration
 const createInitialState = (mandala: MandalaLevel): number[] => {
   let initialState: number[];
   const isSolved = (state: number[]) => {
+    const linkSymbolIndices = mandala.symbols.reduce((acc, symbol, index) => (symbol === 'logo' ? [...acc, index] : acc), [] as number[]);
+
     for (let i = 0; i < mandala.rings - 1; i++) {
       const rot1 = state[i];
       const rot2 = state[i + 1];
 
       let isLinked = false;
-      const linkSymbolIndices = mandala.symbols.reduce((acc, symbol, index) => (symbol === 'logo' ? [...acc, index] : acc), [] as number[]);
-
       for (const pos of linkSymbolIndices) {
         if ((rot1 + pos) % mandala.segments === (rot2 + pos) % mandala.segments) {
           isLinked = true;
@@ -174,7 +179,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
                   {Array.from({ length: mandala.segments }).map((_, segmentIndex) => {
                     const symbolAngle = (segmentIndex / mandala.segments) * 360;
                     const Icon = Icons[mandala.symbols[segmentIndex % mandala.symbols.length]];
-                    const isLinkPoint = mandala.symbols[segmentIndex] === 'logo' && (
+                    const isLinkPoint = mandala.symbols[segmentIndex % mandala.symbols.length] === 'logo' && (
                       (ringIndex > 0 && ringLinks[ringIndex - 1]) ||
                       (ringIndex < mandala.rings - 1 && ringLinks[ringIndex])
                     );

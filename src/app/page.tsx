@@ -53,8 +53,8 @@ export default function Home() {
       <section id="how-to-play" className="py-16 sm:py-24 bg-background">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">How to Play: The Mandala Path</h2>
-            <p className="text-lg text-foreground/70 mt-2 max-w-3xl mx-auto">A meditative journey of logic, pattern, and discovery.</p>
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">A Meditative Journey</h2>
+            <p className="text-lg text-foreground/70 mt-2 max-w-3xl mx-auto">Discover ancient wisdom through a relaxing puzzle experience.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
              <div className="relative aspect-square rounded-lg shadow-lg shadow-primary/20 overflow-hidden border-4 border-primary/10">
@@ -75,7 +75,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-headline font-semibold">1. Align the Rings</h3>
-                  <p className="text-foreground/70 mt-1">Click on a ring to rotate it. Your goal is to align the special 'link' symbols between adjacent rings. When correctly aligned, a link is formed.</p>
+                  <p className="text-foreground/70 mt-1">Rotate the rings to align the sacred symbols. Form an unbroken chain of light to solve the mandala.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -83,8 +83,8 @@ export default function Home() {
                   <BrainCircuit className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-headline font-semibold">2. Solve the Mandala</h3>
-                  <p className="text-foreground/70 mt-1">A mandala is solved when all its rings are linked together in a single, unbroken chain of light. This requires strategic thinking, as rotating one ring can affect others.</p>
+                  <h3 className="text-xl font-headline font-semibold">2. Progress Your Journey</h3>
+                  <p className="text-foreground/70 mt-1">Each mandala contains 9 levels. Completing a mandala unlocks the next chapter of your journey, revealing new challenges and themes.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -93,8 +93,15 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-headline font-semibold">3. Unlock Ancient Wisdom</h3>
-                  <p className="text-foreground/70 mt-1">Completing a mandala's 9 levels rewards you with a new title and unlocks the next mandala in the path. Each solved puzzle reveals a profound insight from Hindu scriptures, deepening your journey.</p>
+                  <p className="text-foreground/70 mt-1">Every solved puzzle reveals a profound insight from Hindu scriptures. Complete a mandala to earn a new title and deepen your understanding.</p>
                 </div>
+              </div>
+              <div className="mt-8">
+                <Button asChild>
+                    <Link href="/how-to-play">
+                        Learn How to Play
+                    </Link>
+                </Button>
               </div>
              </div>
           </div>
