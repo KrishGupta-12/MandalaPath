@@ -3,31 +3,31 @@
     {
       "id": "app-explanation",
       "description": "A majestic Hindu temple gopuram reaching towards the sky.",
-      "imageUrl": "https://njmonthly.com/wp-content/uploads/cache/2014/11/F2_BAPS-Swaminarayan-Akshardham/3752341911.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1588248255331-45239648896a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "hindu temple"
     },
     {
       "id": "mandala-agni",
       "description": "A mandala representing the element of fire, with warm colors.",
-      "imageUrl": "https://images.unsplash.com/photo-1744467350015-31db35ec1479?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmlyZSUyMG1hbmRhbGF8ZW58MHx8fHwxNzU5NDk2NDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1620121684840-a43a6d639a73?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "fire mandala"
     },
     {
       "id": "mandala-jala",
       "description": "A mandala representing the element of water, with cool, flowing colors.",
-      "imageUrl": "https://images.unsplash.com/photo-1552297611-40b71185956c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3YXRlciUyMG1hbmRhbGF8ZW58MHx8fHwxNzU5NDk2NDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1617957723996-568a2a53f9a7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "water mandala"
     },
     {
       "id": "mandala-prithvi",
       "description": "A mandala representing the element of earth, with grounded, stable patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1654691266843-4f52c1fd3228?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlYXJ0aCUyMG1hbmRhbGF8ZW58MHx8fHwxNzU5NDk2NDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1559251606-c620d2e5b39a?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "earth mandala"
     },
     {
       "id": "mandala-vayu",
       "description": "A mandala representing the element of air, with light, ethereal patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1642584596190-44728fa3c2ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhaXIlMjBtYW5kYWxhfGVufDB8fHx8MTc1OTQ5NjQwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1500373994708-4d7814776162?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "air mandala"
     },
     {

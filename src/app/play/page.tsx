@@ -102,19 +102,14 @@ function PlayClientPage() {
 
   return (
     <div className="container mx-auto py-4 h-[calc(100vh-4rem)] flex flex-col items-center">
-        <div className="w-full max-w-2xl mb-2 flex items-center justify-between">
-            <Button asChild variant="ghost" size="sm">
-                <Link href="/dashboard" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
-                    <ChevronLeft className="w-4 h-4 mr-1" />
-                    Back
-                </Link>
-            </Button>
-             <h1 className="text-xl md:text-2xl font-headline font-bold text-primary text-center">
-                {mandalaLevel.name}
-            </h1>
-            <div className="w-16"></div>
-        </div>
-      <p className="text-foreground/80 mb-4 max-w-lg text-center text-sm">Align all 'logo' symbols to restore the mandala.</p>
+      <div className="w-full flex items-center justify-between mb-2">
+          <Button asChild variant="ghost" size="sm" className="self-start">
+              <Link href="/dashboard" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  Back
+              </Link>
+          </Button>
+      </div>
       <PuzzleBoard 
         key={mandalaLevel.id} 
         mandala={mandalaLevel} 
