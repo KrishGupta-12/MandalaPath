@@ -1,7 +1,7 @@
 'use client';
 import { Suspense } from 'react';
 import { PuzzleBoard } from '@/components/game/puzzle-board';
-import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { MandalaLevel } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -46,25 +46,31 @@ function PlayClientPage() {
   }, [mandalaId, router]);
 
   useEffect(() => {
-    // CRITICAL FIX: Do not proceed until the initial data loading is complete.
-    if (isLoadingProgress) {
-        return; 
+    // This effect runs ONLY when the loading state changes or the user/mandala changes.
+    // It is the definitive source of truth for setting the current level.
+    if (isLoadingProgress || !userProgressRef || !mandalaId) {
+      // If we are still loading, or don't have the necessary refs, do nothing.
+      return;
     }
 
-    // After loading, decide the state based on whether a progress document exists.
+    // At this point, isLoadingProgress is false. We can safely check userProgress.
     if (userProgress) {
-        // Progress document exists. Use its level.
-        // If the user has completed the mandala (level > total), reset to level 1 for replay.
-        const startLevel = userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level;
-        setCurrentLevel(startLevel);
+      // A progress document exists.
+      // If the user has completed the mandala (level > total), reset to level 1 for replay.
+      const startLevel = userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level;
+      setCurrentLevel(startLevel);
     } else {
-        // No progress document exists for this user and mandala. This means it's their first time playing.
-        // We can now safely create the initial progress document.
-        if (userProgressRef && mandalaId) {
-            setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: false });
-            // Set local state immediately to avoid waiting for the next render cycle.
-            setCurrentLevel(1);
-        }
+      // No progress document exists. This is the user's first time playing this mandala.
+      // We must create it and THEN set the level.
+      const initializeProgress = async () => {
+        const initialProgress = { level: 1, id: mandalaId };
+        // Await the creation to ensure it exists before any potential re-renders.
+        await setDoc(userProgressRef, initialProgress, { merge: false }); 
+        // Now that we've created the document, set the local state.
+        // The useDoc hook will also update with this new data, but setting it here is faster.
+        setCurrentLevel(1);
+      };
+      initializeProgress();
     }
   }, [isLoadingProgress, userProgress, userProgressRef, mandalaId]);
 
@@ -94,7 +100,7 @@ function PlayClientPage() {
        
        if (nextLevel <= TOTAL_LEVELS_PER_MANDALA) {
             // Progress to the next level within the same mandala
-            setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
+            await setDoc(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel); // Update local state to re-render puzzle
        } else {
             // Mark as completed (level > total levels).
@@ -126,14 +132,14 @@ function PlayClientPage() {
                 </Link>
             </Button>
         </div>
-         {/* Header Section */}
-        <div className="text-center w-full mb-4">
-            <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
-                {mandalaLevel.name}
-            </h1>
-            <p className="text-foreground/80">Level {mandalaLevel.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
-        </div>
         <div className="w-full flex flex-col items-center justify-center p-2 flex-grow">
+             {/* Header Section */}
+            <div className="text-center w-full mb-4">
+                <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
+                    {mandalaLevel.name}
+                </h1>
+                <p className="text-foreground/80">Level {mandalaLevel.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
+            </div>
             <PuzzleBoard 
                 key={mandalaLevel.id} // Key ensures component re-mounts on level change
                 mandala={mandalaLevel} 
