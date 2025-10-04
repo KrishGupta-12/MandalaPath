@@ -43,7 +43,7 @@ export default function HowToPlayPage() {
               </div>
               <div>
                 <h3 className="text-xl font-headline font-semibold">3. Progress Your Journey</h3>
-                <p className="text-foreground/70 mt-1">Each mandala has 9 levels of increasing difficulty. You must complete all 9 levels of a mandala to unlock the next one in the sequence. Your progress is saved automatically.</p>
+                <p className="text-foreground/70 mt-1">Each mandala has 9 levels of increasing difficulty. While your progress level-by-level is saved automatically, you must complete all 9 levels of a mandala to unlock the next one in the sequence.</p>
               </div>
             </div>
             <div className="flex items-start gap-4">

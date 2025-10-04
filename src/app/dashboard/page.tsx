@@ -141,7 +141,7 @@ export default function DashboardPage() {
                   <CardDescription className="text-sm h-10 text-foreground/80">{mandala.description}</CardDescription>
                 </div>
                 
-                <div className='mt-auto pt-2'>
+                <div className='mt-auto pt-4'>
                   <Progress value={isCompleted ? 100 : progressPercentage} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-1">
                     {isCompleted ? 'Completed' : `Level ${currentLevel} / ${TOTAL_LEVELS_PER_MANDALA}`}
