@@ -9,8 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 export default function Home() {
-  const howToPlayImage = PlaceHolderImages.find((img) => img.id === 'mandala-vayu');
-  const founderAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar-1');
+  const howToPlayImage = PlaceHolderImages.find((img) => img.id === 'mandala-yoga');
 
 
   return (
@@ -54,8 +53,8 @@ export default function Home() {
       <section id="how-to-play" className="py-16 sm:py-24 bg-background">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">How to Play: Mandala Link</h2>
-            <p className="text-lg text-foreground/70 mt-2 max-w-3xl mx-auto">A game of strategy, logic, and visual harmony.</p>
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">How to Play: The Mandala Path</h2>
+            <p className="text-lg text-foreground/70 mt-2 max-w-3xl mx-auto">A meditative journey of logic, pattern, and discovery.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
              <div className="relative aspect-square rounded-lg shadow-lg shadow-primary/20 overflow-hidden border-4 border-primary/10">
@@ -75,8 +74,8 @@ export default function Home() {
                   <Puzzle className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-headline font-semibold">Rotate and Connect</h3>
-                  <p className="text-foreground/70 mt-1">Click a ring to rotate it. When a 'logo' symbol on one ring aligns with a 'logo' on its neighbor, they will link and glow.</p>
+                  <h3 className="text-xl font-headline font-semibold">1. Align the Rings</h3>
+                  <p className="text-foreground/70 mt-1">Click on a ring to rotate it. Your goal is to align the special 'link' symbols between adjacent rings. When correctly aligned, a link is formed.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -84,8 +83,8 @@ export default function Home() {
                   <BrainCircuit className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-headline font-semibold">Beware the Chain Reaction</h3>
-                  <p className="text-foreground/70 mt-1">The twist! Rotating a ring will also rotate any rings currently linked to it. You must think strategically to connect the whole mandala.</p>
+                  <h3 className="text-xl font-headline font-semibold">2. Solve the Mandala</h3>
+                  <p className="text-foreground/70 mt-1">A mandala is solved when all its rings are linked together in a single, unbroken chain of light. This requires strategic thinking, as rotating one ring can affect others.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -93,8 +92,8 @@ export default function Home() {
                   <BookOpen className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-headline font-semibold">Unlock Ancient Wisdom</h3>
-                  <p className="text-foreground/70 mt-1">Once all rings are linked, the mandala is solved! You'll be rewarded with a profound insight from Hindu scriptures, which deepens as you complete more levels.</p>
+                  <h3 className="text-xl font-headline font-semibold">3. Unlock Ancient Wisdom</h3>
+                  <p className="text-foreground/70 mt-1">Completing a mandala's 9 levels rewards you with a new title and unlocks the next mandala in the path. Each solved puzzle reveals a profound insight from Hindu scriptures, deepening your journey.</p>
                 </div>
               </div>
              </div>

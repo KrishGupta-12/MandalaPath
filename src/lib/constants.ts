@@ -6,7 +6,7 @@ export const MANDALAS: Mandala[] = [
   // 1. Truth (Satya)
   {
     id: 'satya',
-    name: 'Mandala of Truth (Satya)',
+    name: 'Mandala of Truth',
     imageId: 'mandala-satya',
     baseRings: 3,
     segments: 8,
@@ -16,7 +16,7 @@ export const MANDALAS: Mandala[] = [
   // 2. Compassion (Karuna)
   {
     id: 'karuna',
-    name: 'Mandala of Compassion (Karuna)',
+    name: 'Mandala of Compassion',
     imageId: 'mandala-karuna',
     baseRings: 3,
     segments: 8,
@@ -26,7 +26,7 @@ export const MANDALAS: Mandala[] = [
    // 3. Energy (Agni)
   {
     id: 'agni',
-    name: 'Mandala of Energy (Agni)',
+    name: 'Mandala of Energy',
     imageId: 'mandala-agni',
     baseRings: 3,
     segments: 8,
@@ -36,7 +36,7 @@ export const MANDALAS: Mandala[] = [
   // 4. Purity (Ganga)
   {
     id: 'ganga',
-    name: 'Mandala of Purity (Ganga)',
+    name: 'Mandala of Purity',
     imageId: 'mandala-ganga',
     baseRings: 4,
     segments: 8,
@@ -46,7 +46,7 @@ export const MANDALAS: Mandala[] = [
    // 5. Devotion (Bhakti)
   {
     id: 'bhakti',
-    name: 'Mandala of Devotion (Bhakti)',
+    name: 'Mandala of Devotion',
     imageId: 'mandala-bhakti',
     baseRings: 4,
     segments: 10,
@@ -56,7 +56,7 @@ export const MANDALAS: Mandala[] = [
   // 6. Wisdom (Gyaan)
   {
     id: 'gyaan',
-    name: 'Mandala of Wisdom (Gyaan)',
+    name: 'Mandala of Wisdom',
     imageId: 'mandala-gyaan',
     baseRings: 4,
     segments: 12,
@@ -66,7 +66,7 @@ export const MANDALAS: Mandala[] = [
   // 7. Balance (Yoga)
   {
     id: 'yoga',
-    name: 'Mandala of Balance (Yoga)',
+    name: 'Mandala of Balance',
     imageId: 'mandala-yoga',
     baseRings: 5,
     segments: 12,
@@ -76,7 +76,7 @@ export const MANDALAS: Mandala[] = [
   // 8. Prosperity (Lakshmi)
   {
     id: 'lakshmi',
-    name: 'Mandala of Prosperity (Lakshmi)',
+    name: 'Mandala of Prosperity',
     imageId: 'mandala-lakshmi',
     baseRings: 5,
     segments: 10,
@@ -86,7 +86,7 @@ export const MANDALAS: Mandala[] = [
   // 9. Courage (Veer)
   {
     id: 'veer',
-    name: 'Mandala of Courage (Veer)',
+    name: 'Mandala of Courage',
     imageId: 'mandala-veer',
     baseRings: 5,
     segments: 12,
@@ -96,7 +96,7 @@ export const MANDALAS: Mandala[] = [
   // 10. Nature (Prakriti)
   {
     id: 'prakriti',
-    name: 'Mandala of Nature (Prakriti)',
+    name: 'Mandala of Nature',
     imageId: 'mandala-prakriti',
     baseRings: 6,
     segments: 12,
@@ -106,7 +106,7 @@ export const MANDALAS: Mandala[] = [
   // 11. Light (Jyoti)
   {
     id: 'jyoti',
-    name: 'Mandala of Light (Jyoti)',
+    name: 'Mandala of Light',
     imageId: 'mandala-jyoti',
     baseRings: 6,
     segments: 8,
@@ -116,7 +116,7 @@ export const MANDALAS: Mandala[] = [
   // 12. Liberation (Moksha)
   {
     id: 'moksha',
-    name: 'Mandala of Liberation (Moksha)',
+    name: 'Mandala of Liberation',
     imageId: 'mandala-moksha',
     baseRings: 7,
     segments: 12,

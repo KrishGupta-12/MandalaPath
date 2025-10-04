@@ -2,7 +2,7 @@
 import { Suspense } from 'react';
 import { PuzzleBoard } from '@/components/game/puzzle-board';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
-import { Mandala, MandalaLevel, UserMandalaProgress } from '@/lib/types';
+import { MandalaLevel } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MANDALAS, TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 import { doc } from 'firebase/firestore';
+import type { UserMandalaProgress } from '@/lib/types';
 
 function PlayClientPage() {
   const { user, isUserLoading } = useUser();
@@ -38,6 +39,7 @@ function PlayClientPage() {
     if (userProgress) {
         setCurrentLevel(userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level);
     } else if (userProgressRef && mandalaId) {
+        // If no progress doc exists, create one starting at level 1.
         setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
         setCurrentLevel(1);
     }
@@ -47,14 +49,15 @@ function PlayClientPage() {
   const mandalaLevel: MandalaLevel | null = useMemo(() => {
     if (!mandalaConfig || currentLevel === null) return null;
 
-    const level = Math.min(currentLevel, TOTAL_LEVELS_PER_MANDALA);
-    const rings = mandalaConfig.baseRings + level - 1;
+    // Ensure level does not exceed the max for puzzle generation
+    const levelForPuzzle = Math.min(currentLevel, TOTAL_LEVELS_PER_MANDALA);
+    const rings = mandalaConfig.baseRings + levelForPuzzle - 1;
 
     return {
-      id: `${mandalaConfig.id}-${level}`,
+      id: `${mandalaConfig.id}-${levelForPuzzle}`,
       mandalaId: mandalaConfig.id,
-      name: `${mandalaConfig.name}`, // Removed level from name, it's shown separately
-      level: level,
+      name: `${mandalaConfig.name}`, // Name is just the mandala name
+      level: levelForPuzzle,
       rings: rings,
       segments: mandalaConfig.segments,
       symbols: mandalaConfig.symbols,
@@ -67,8 +70,9 @@ function PlayClientPage() {
       const nextLevel = currentLevel + 1;
        
        if (nextLevel <= TOTAL_LEVELS_PER_MANDALA) {
+            // Progress to the next level within the same mandala
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
-            setCurrentLevel(nextLevel);
+            setCurrentLevel(nextLevel); // Update local state to re-render puzzle
        } else {
             // Mark as completed (level > total levels)
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
@@ -111,7 +115,7 @@ function PlayClientPage() {
           </Button>
       </div>
       <PuzzleBoard 
-        key={mandalaLevel.id} 
+        key={mandalaLevel.id} // Key ensures component re-mounts on level change
         mandala={mandalaLevel} 
         onSolve={handlePuzzleSolved}
       />
