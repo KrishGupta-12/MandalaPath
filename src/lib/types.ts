@@ -17,9 +17,9 @@ export interface Mandala {
   name: string;
   imageId: string;
   baseRings: number;
-  maxRings: number;
   segments: number;
   symbols: Icon[];
+  description: string;
 }
 
 export interface MandalaLevel {

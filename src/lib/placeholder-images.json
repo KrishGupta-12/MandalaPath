@@ -50,9 +50,27 @@
     },
     {
       "id": "mandala-dharma",
-      "description": "A representation of Dharma, with scales of justice showing cosmic balance and order.",
+      "description": "A representation of Dharma, showing cosmic balance and order.",
       "imageUrl": "https://images.unsplash.com/photo-1599951883902-140b2a7e78e6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "righteousness balance"
+    },
+    {
+      "id": "mandala-aranyani",
+      "description": "An enchanting, dense forest representing the goddess Aranyani.",
+      "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "enchanted forest"
+    },
+    {
+      "id": "mandala-soma",
+      "description": "A mystical, glowing potion in a celestial chalice, representing Soma.",
+      "imageUrl": "https://images.unsplash.com/photo-1550422979-3a3f3a093758?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "glowing potion"
+    },
+    {
+      "id": "mandala-brahman",
+      "description": "An abstract representation of the cosmos and ultimate reality.",
+      "imageUrl": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1848&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "cosmos nebula"
     },
     {
       "id": "user-avatar-1",

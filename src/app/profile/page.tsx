@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { collection } from 'firebase/firestore';
 import type { UserMandalaProgress } from '@/lib/types';
-import { getTitleByLevel } from '@/lib/constants';
+import { getTitleByMandalasCompleted, TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 
 export default function ProfilePage() {
   const { user, isUserLoading } = useUser();
@@ -28,10 +28,15 @@ export default function ProfilePage() {
 
   const { data: userProgress } = useCollection<UserMandalaProgress>(userProgressQuery);
 
-  const { totalLevel, playerTitle } = useMemo(() => {
-    if (!userProgress) return { totalLevel: 0, playerTitle: 'Mandala Novice' };
-    const total = userProgress.reduce((sum, p) => sum + (p.level - 1), 0);
-    return { totalLevel: total, playerTitle: getTitleByLevel(total) };
+  const { mandalasCompleted, playerTitle } = useMemo(() => {
+    if (!userProgress) return { mandalasCompleted: 0, playerTitle: 'Mandala Novice' };
+    
+    const completedCount = userProgress.filter(p => p.level > TOTAL_LEVELS_PER_MANDALA).length;
+    
+    return { 
+      mandalasCompleted: completedCount, 
+      playerTitle: getTitleByMandalasCompleted(completedCount) 
+    };
   }, [userProgress]);
 
 
@@ -83,8 +88,8 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="font-medium text-muted-foreground">Total Levels Completed</p>
-                <p className="font-semibold text-foreground text-xl">{totalLevel}</p>
+                <p className="font-medium text-muted-foreground">Mandalas Completed</p>
+                <p className="font-semibold text-foreground text-xl">{mandalasCompleted}</p>
               </div>
           </CardContent>
         </Card>

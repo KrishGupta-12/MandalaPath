@@ -1,15 +1,15 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useUser, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
-import { Award, Play } from 'lucide-react';
+import { Award, Play, Lock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
-import { MANDALAS, getTitleByLevel } from '@/lib/constants';
+import { MANDALAS, getTitleByMandalasCompleted, TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 import type { Mandala, UserMandalaProgress } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { collection } from 'firebase/firestore';
@@ -34,7 +34,18 @@ export default function DashboardPage() {
   const { data: userProgress, isLoading: isLoadingProgress } = useCollection<UserMandalaProgress>(userProgressQuery);
 
   const mandalas: Mandala[] = MANDALAS;
-  const isLoadingMandalas = false; // Mandalas are from constants for now
+  const isLoadingMandalas = false; 
+
+  const { mandalasCompleted, playerTitle } = useMemo(() => {
+    if (!userProgress) return { mandalasCompleted: 0, playerTitle: 'Mandala Novice' };
+    
+    const completedCount = userProgress.filter(p => p.level > TOTAL_LEVELS_PER_MANDALA).length;
+    
+    return { 
+      mandalasCompleted: completedCount, 
+      playerTitle: getTitleByMandalasCompleted(completedCount) 
+    };
+  }, [userProgress]);
 
   const getMandalaProgress = (mandalaId: string) => {
     if (!userProgress) return 1;
@@ -43,23 +54,9 @@ export default function DashboardPage() {
   };
   
   const getProgressPercentage = (currentLevel: number) => {
-    const totalLevels = 9;
     const completedLevels = currentLevel - 1;
-    return (completedLevels / totalLevels) * 100;
+    return (completedLevels / TOTAL_LEVELS_PER_MANDALA) * 100;
   }
-
-  const { totalLevel, playerTitle } = useMemo(() => {
-    if (!userProgress) return { totalLevel: 0, playerTitle: 'Mandala Novice' };
-    
-    const total = userProgress.reduce((sum, progress) => {
-      // Each mandala has 9 levels, progress.level is the *next* level to play
-      // So a progress.level of 1 means 0 levels are complete.
-      return sum + (progress.level - 1);
-    }, 0);
-    
-    return { totalLevel: total, playerTitle: getTitleByLevel(total) };
-  }, [userProgress]);
-
 
   if (isUserLoading || !user) {
     return (
@@ -73,12 +70,12 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="flex justify-between items-start mb-2">
+      <div className="flex justify-between items-start mb-8">
         <div>
           <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary">Choose a Mandala</h1>
           <p className="text-foreground/80 mt-1">Select a puzzle to begin your meditation.</p>
         </div>
-        <Card className="p-3">
+        <Card className="p-3 shrink-0">
           <div className="flex items-center gap-2">
             <Award className="w-6 h-6 text-primary"/>
             <div>
@@ -89,8 +86,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <p className="text-foreground/80 mb-8">Total Levels Completed: {totalLevel}</p>
-      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {(isLoadingMandalas || isLoadingProgress) ? (
             Array.from({ length: 8 }).map((_, i) => (
@@ -101,6 +96,7 @@ export default function DashboardPage() {
                        <Skeleton className="h-4 w-1/2" />
                     </CardHeader>
                     <CardContent className="p-4">
+                        <Skeleton className="h-4 w-full mb-2" />
                         <Skeleton className="h-2 w-full" />
                     </CardContent>
                     <CardFooter className="p-4">
@@ -109,15 +105,18 @@ export default function DashboardPage() {
                 </Card>
             ))
         ) : (
-        mandalas.map((mandala) => {
+        mandalas.map((mandala, index) => {
           const image = PlaceHolderImages.find((img) => img.id === mandala.imageId);
           const currentLevel = getMandalaProgress(mandala.id);
-          const isLocked = false; // All mandalas are unlocked
+          const isLocked = index > mandalasCompleted;
           const progressPercentage = getProgressPercentage(currentLevel);
-          const isMaxLevel = currentLevel > 9;
+          const isCompleted = currentLevel > TOTAL_LEVELS_PER_MANDALA;
           
           return (
-            <Card key={mandala.id} className={cn("overflow-hidden transition-all hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1 flex flex-col")}>
+            <Card key={mandala.id} className={cn(
+              "overflow-hidden flex flex-col transition-all", 
+              isLocked ? "bg-card/50" : "hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1"
+            )}>
               <CardHeader className="p-0">
                 <div className="relative aspect-square">
                   {image && (
@@ -125,23 +124,33 @@ export default function DashboardPage() {
                       src={image.imageUrl}
                       alt={mandala.name}
                       fill
-                      className={cn("object-cover")}
+                      className={cn("object-cover", isLocked && "grayscale opacity-50")}
                       data-ai-hint={image.imageHint}
                     />
+                  )}
+                  {isLocked && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Lock className="w-12 h-12 text-primary-foreground/50" />
+                    </div>
                   )}
                 </div>
               </CardHeader>
               <div className='p-4 flex flex-col flex-grow'>
-                <CardTitle className={cn("font-headline text-xl text-primary")}>{mandala.name}</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">Level {isMaxLevel ? '1' : currentLevel}</p>
-                <div className='flex-grow mt-2'>
-                  <Progress value={isMaxLevel ? 0 : progressPercentage} className="h-2" />
+                <CardTitle className={cn("font-headline text-xl", isLocked ? "text-muted-foreground" : "text-primary")}>{mandala.name}</CardTitle>
+                <CardDescription className="mt-1 text-sm h-10">{mandala.description}</CardDescription>
+                
+                <div className='flex-grow mt-4'>
+                  <Progress value={isCompleted ? 100 : progressPercentage} className="h-2" />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {isCompleted ? 'Completed' : `Level ${currentLevel} / ${TOTAL_LEVELS_PER_MANDALA}`}
+                  </p>
                 </div>
+                
                 <CardFooter className="p-0 pt-4">
-                  <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
+                  <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold" disabled={isLocked}>
                     <Link href={`/play?mandala=${mandala.id}`}>
                       <Play className="mr-2 h-4 w-4" />
-                      Play
+                      {isCompleted ? 'Play Again' : 'Play'}
                     </Link>
                   </Button>
                 </CardFooter>

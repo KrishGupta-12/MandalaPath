@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { MANDALAS } from '@/lib/constants';
+import { MANDALAS, TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 import { doc } from 'firebase/firestore';
 
 function PlayClientPage() {
@@ -36,7 +36,7 @@ function PlayClientPage() {
     if (isLoadingProgress) return;
 
     if (userProgress) {
-        setCurrentLevel(userProgress.level);
+        setCurrentLevel(userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level);
     } else if (userProgressRef && mandalaId) {
         setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
         setCurrentLevel(1);
@@ -47,14 +47,13 @@ function PlayClientPage() {
   const mandalaLevel: MandalaLevel | null = useMemo(() => {
     if (!mandalaConfig || currentLevel === null) return null;
 
-    const totalLevels = 9;
-    const level = Math.min(currentLevel, totalLevels);
+    const level = Math.min(currentLevel, TOTAL_LEVELS_PER_MANDALA);
     const rings = mandalaConfig.baseRings + level - 1;
 
     return {
       id: `${mandalaConfig.id}-${level}`,
       mandalaId: mandalaConfig.id,
-      name: `${mandalaConfig.name} - Level ${level}`,
+      name: `${mandalaConfig.name}`, // Removed level from name, it's shown separately
       level: level,
       rings: rings,
       segments: mandalaConfig.segments,
@@ -66,14 +65,15 @@ function PlayClientPage() {
       if (!user || !mandalaId || !userProgressRef || !currentLevel || !mandalaConfig) return;
       
       const nextLevel = currentLevel + 1;
-      const totalLevels = 9;
        
-       if (nextLevel <= totalLevels) {
+       if (nextLevel <= TOTAL_LEVELS_PER_MANDALA) {
             setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
             setCurrentLevel(nextLevel);
        } else {
-            setDocumentNonBlocking(userProgressRef, { level: 1 }, { merge: true });
-            setTimeout(() => setCurrentLevel(1), 500); 
+            // Mark as completed (level > total levels)
+            setDocumentNonBlocking(userProgressRef, { level: nextLevel }, { merge: true });
+            // Redirect to dashboard to choose next mandala
+            router.push('/dashboard');
        }
   };
 
@@ -106,7 +106,7 @@ function PlayClientPage() {
           <Button asChild variant="ghost" size="sm" className="self-start">
               <Link href="/dashboard" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
                   <ChevronLeft className="w-4 h-4 mr-1" />
-                  Back
+                  Back to Dashboard
               </Link>
           </Button>
       </div>

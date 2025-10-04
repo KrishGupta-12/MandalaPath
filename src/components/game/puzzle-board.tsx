@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { RotateCcw, HeartPulse } from 'lucide-react';
 import { CulturalInsightDialog } from '@/components/game/cultural-insight-dialog';
 import { Icons } from '../shared/icons';
+import { TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 
 interface PuzzleBoardProps {
   mandala: MandalaLevel;
@@ -89,13 +90,11 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   useEffect(() => {
     const updateSize = () => {
       if (boardContainerRef.current) {
-        const parent = boardContainerRef.current.parentElement;
-        if (parent) {
-            const parentWidth = parent.clientWidth;
-            const parentHeight = parent.clientHeight;
-            const size = Math.min(parentWidth, parentHeight) * 0.9;
-            setBoardSize(size);
-        }
+        const parent = boardContainerRef.current;
+        const parentWidth = parent.clientWidth;
+        const parentHeight = parent.clientHeight;
+        const size = Math.min(parentWidth, parentHeight, 800) * 0.95; // Added max size
+        setBoardSize(size);
       }
     };
 
@@ -155,24 +154,24 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
     setIsInsightOpen(false);
   };
 
-  const ringBaseRadius = boardSize * 0.15;
+  const ringBaseRadius = boardSize * 0.1;
   const ringGap = (boardSize / 2 - ringBaseRadius) / mandala.rings;
   const ringRadius = (ringIndex: number) => ringBaseRadius + ringIndex * ringGap;
-  const symbolSize = Math.max(12, ringGap * 0.6);
+  const symbolSize = Math.max(10, Math.min(24, ringGap * 0.5));
 
   return (
     <>
-      <div className="w-full flex-grow flex flex-col items-center justify-center p-2">
-        <div className="text-center mb-4">
-             <h1 className="text-xl md:text-2xl font-headline font-bold text-primary">
+      <div className="w-full flex-grow flex flex-col items-center justify-center p-2 relative">
+        <div className="text-center absolute top-0 w-full">
+             <h1 className="text-2xl md:text-3xl font-headline font-bold text-primary">
                 {mandala.name}
             </h1>
-            <p className="text-foreground/80 text-sm">Align all 'logo' symbols to restore the mandala.</p>
+            <p className="text-foreground/80">Level {mandala.level} / {TOTAL_LEVELS_PER_MANDALA}</p>
         </div>
 
-        {/* Responsive Puzzle Board Container */}
-        <div ref={boardContainerRef} className="relative flex-grow w-full flex items-center justify-center">
-          <div className="absolute" style={{ width: boardSize, height: boardSize }}>
+        {/* Dedicated, Responsive Puzzle Board Container */}
+        <div ref={boardContainerRef} className="absolute inset-0 w-full h-full flex items-center justify-center">
+          <div className="relative" style={{ width: boardSize, height: boardSize }}>
             {rotations.map((rotation, ringIndex) => {
               const isFirstRing = ringIndex === 0;
               const isLinkedToInner = !isFirstRing && ringLinks[ringIndex - 1];
@@ -191,7 +190,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
                   style={{
                     width: `${currentRadius * 2}px`,
                     height: `${currentRadius * 2}px`,
-                    transform: `rotate(${(rotation / mandala.segments) * 360}deg)`,
+                    transform: `translate(-50%, -50%) rotate(${(rotation / mandala.segments) * 360}deg)`,
                     cursor: isSolved ? 'default' : 'pointer'
                   }}
                   onClick={() => handleRotate(ringIndex)}
@@ -210,15 +209,15 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
                         className="absolute w-full h-full"
                         style={{ transform: `rotate(${symbolAngle}deg)` }}
                       >
-                        <div className="absolute top-[-1px] left-1/2 -translate-x-1/2 flex items-center justify-center" style={{ width: symbolSize, height: symbolSize }}>
+                        <div className="absolute top-[-1px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center" style={{ width: symbolSize, height: symbolSize }}>
                           <Icon className={cn(
                             "text-primary transition-colors duration-300",
                             isLinkPoint && "text-accent",
                             isSolved && "text-accent"
                           )}
                             style={{
-                              width: symbolSize,
-                              height: symbolSize,
+                              width: '100%',
+                              height: '100%',
                               transform: `rotate(${-symbolAngle - (rotation / mandala.segments) * 360}deg)`
                             }}
                           />
@@ -233,7 +232,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         </div>
 
         {/* Controls and Stats */}
-        <div className="w-full max-w-sm flex flex-col items-center gap-4 mt-4">
+        <div className="absolute bottom-0 w-full max-w-sm flex flex-col items-center gap-4">
           <div className="w-full grid grid-cols-2 gap-4">
             <div className="text-center p-3 rounded-lg bg-card border">
               <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><HeartPulse className="w-3 h-3" />PRANA</p>
