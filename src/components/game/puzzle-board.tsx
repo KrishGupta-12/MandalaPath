@@ -146,11 +146,21 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
     setPrana(mandala.rings * mandala.level * 3);
     setIsInsightOpen(false);
   };
-
-  const ringBaseRadius = boardSize * 0.1;
-  const ringGap = (boardSize / 2 - ringBaseRadius) / mandala.rings;
-  const ringRadius = (ringIndex: number) => ringBaseRadius + ringIndex * ringGap;
+  
+  // Dynamic scaling based on number of rings
+  const ringBaseRadiusFactor = 0.1; // The center hole size is 10% of the board
+  const maxRingAreaFactor = 1 - ringBaseRadiusFactor; // The area available for rings
+  const ringGapFactor = maxRingAreaFactor / mandala.rings;
+  const ringGap = boardSize * 0.5 * ringGapFactor;
+  
+  const ringRadius = (ringIndex: number) => {
+      const baseRadius = boardSize * 0.5 * ringBaseRadiusFactor;
+      return baseRadius + (ringIndex + 1) * ringGap;
+  };
+  
+  // Scale symbols to fit within the ring gap
   const symbolSize = Math.max(10, Math.min(24, ringGap * 0.5));
+
 
   return (
     <>

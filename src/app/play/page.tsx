@@ -46,19 +46,23 @@ function PlayClientPage() {
   }, [mandalaId, router]);
 
   useEffect(() => {
-    // Only set the level when progress is loaded
-    if (!isLoadingProgress && userProgress) {
-        // If user has completed all levels, they can replay from level 1.
-        // Otherwise, start them on their current saved level.
+    // This effect's job is to set the initial level from Firestore data.
+    // It should only run when the loading is complete.
+    if (isLoadingProgress) {
+        return; // Wait until data is loaded
+    }
+
+    if (userProgress) {
+        // Data exists, set the level from user's progress.
+        // If they have completed the mandala, let them replay from level 1.
         const startLevel = userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level;
         setCurrentLevel(startLevel);
-    } else if (!isLoadingProgress && !userProgress && userProgressRef) {
-        // This case handles a new player starting a mandala for the first time.
-        // If no progress doc exists after loading, create one starting at level 1.
+    } else if (userProgressRef) {
+        // No progress data exists for this user/mandala yet.
+        // This is their first time playing it. Create the document and set level to 1.
         setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
         setCurrentLevel(1);
     }
-    // Intentionally not running when userProgress is still loading.
   }, [isLoadingProgress, userProgress, userProgressRef, mandalaId]);
 
 
