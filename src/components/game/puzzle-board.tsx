@@ -9,11 +9,6 @@ import { CulturalInsightDialog } from '@/components/game/cultural-insight-dialog
 import { Icons } from '../shared/icons';
 import { TOTAL_LEVELS_PER_MANDALA } from '@/lib/constants';
 
-interface PuzzleBoardProps {
-  mandala: MandalaLevel;
-  onSolve: () => void;
-}
-
 // Generate a random, unsolved starting configuration
 const createInitialState = (mandala: MandalaLevel): number[] => {
   let initialState: number[];
@@ -90,11 +85,13 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
   useEffect(() => {
     const updateSize = () => {
       if (boardContainerRef.current) {
-        const parent = boardContainerRef.current;
-        const parentWidth = parent.clientWidth;
-        const parentHeight = parent.clientHeight;
-        const size = Math.min(parentWidth, parentHeight, 800) * 0.95; // Added max size
-        setBoardSize(size);
+        const parent = boardContainerRef.current.parentElement;
+        if (parent) {
+            const parentWidth = parent.clientWidth;
+            const parentHeight = parent.clientHeight;
+            const size = Math.min(parentWidth, parentHeight) * 0.9;
+            setBoardSize(size);
+        }
       }
     };
 
@@ -103,40 +100,15 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  const getLinkedGroup = (ringIndex: number): number[] => {
-    const group: number[] = [ringIndex];
-    // Check outwards
-    for (let i = ringIndex; i < mandala.rings - 1; i++) {
-      if (ringLinks[i]) {
-        group.push(i + 1);
-      } else {
-        break;
-      }
-    }
-    // Check inwards
-    for (let i = ringIndex - 1; i >= 0; i--) {
-      if (ringLinks[i]) {
-        group.push(i);
-      } else {
-        break;
-      }
-    }
-    return Array.from(new Set(group));
-  };
-
-  const handleRotate = (ringIndex: number) => {
+  const handleRotate = (ringIndex: number, direction: 'cw' | 'ccw') => {
     if (isSolved) return;
-
-    const linkedGroup = getLinkedGroup(ringIndex);
-
+  
     setRotations(prevRotations => {
       const newRotations = [...prevRotations];
-      const step = 1; // Always rotate clockwise
-
-      linkedGroup.forEach(idx => {
-        newRotations[idx] = (newRotations[idx] + step + mandala.segments) % mandala.segments;
-      });
-
+      const step = direction === 'cw' ? 1 : -1;
+  
+      newRotations[ringIndex] = (newRotations[ringIndex] + step + mandala.segments) % mandala.segments;
+  
       return newRotations;
     });
     setPrana(prev => prev + 1);
@@ -170,7 +142,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         </div>
 
         {/* Dedicated, Responsive Puzzle Board Container */}
-        <div ref={boardContainerRef} className="absolute inset-0 w-full h-full flex items-center justify-center">
+        <div ref={boardContainerRef} className="w-full flex-grow flex items-center justify-center">
           <div className="relative" style={{ width: boardSize, height: boardSize }}>
             {rotations.map((rotation, ringIndex) => {
               const isFirstRing = ringIndex === 0;
@@ -193,7 +165,11 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
                     transform: `translate(-50%, -50%) rotate(${(rotation / mandala.segments) * 360}deg)`,
                     cursor: isSolved ? 'default' : 'pointer'
                   }}
-                  onClick={() => handleRotate(ringIndex)}
+                  onClick={() => handleRotate(ringIndex, 'cw')}
+                  onContextMenu={(e) => {
+                      e.preventDefault();
+                      handleRotate(ringIndex, 'ccw');
+                  }}
                 >
                   {Array.from({ length: mandala.segments }).map((_, segmentIndex) => {
                     const symbolAngle = (segmentIndex / mandala.segments) * 360;
@@ -232,7 +208,7 @@ export function PuzzleBoard({ mandala, onSolve }: PuzzleBoardProps) {
         </div>
 
         {/* Controls and Stats */}
-        <div className="absolute bottom-0 w-full max-w-sm flex flex-col items-center gap-4">
+        <div className="w-full max-w-sm flex flex-col items-center gap-4">
           <div className="w-full grid grid-cols-2 gap-4">
             <div className="text-center p-3 rounded-lg bg-card border">
               <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><HeartPulse className="w-3 h-3" />PRANA</p>

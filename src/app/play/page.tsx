@@ -37,7 +37,10 @@ function PlayClientPage() {
     if (isLoadingProgress) return;
 
     if (userProgress) {
-        setCurrentLevel(userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level);
+        // If user has completed all levels, they can replay from level 1.
+        // Otherwise, start them on their current saved level.
+        const startLevel = userProgress.level > TOTAL_LEVELS_PER_MANDALA ? 1 : userProgress.level;
+        setCurrentLevel(startLevel);
     } else if (userProgressRef && mandalaId) {
         // If no progress doc exists, create one starting at level 1.
         setDocumentNonBlocking(userProgressRef, { level: 1, id: mandalaId }, { merge: true });
