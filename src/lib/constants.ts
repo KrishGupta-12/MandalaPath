@@ -1,127 +1,151 @@
 import { Mandala } from './types';
 
-// This defines the base configuration for each mandala path.
+// This defines the base configuration for each of the 12 mandala paths.
 // Each mandala has 9 levels of progression.
 export const MANDALAS: Mandala[] = [
+  // 1. Truth (Satya)
   {
-    id: 'agni', // Fire
-    name: 'Mandala of Agni',
+    id: 'satya',
+    name: 'Mandala of Truth (Satya)',
+    imageId: 'mandala-satya',
+    baseRings: 3,
+    segments: 8,
+    symbols: ['logo', 'lotus', 'logo', 'lotus', 'logo', 'lotus', 'logo', 'lotus'],
+    description: "Theme: Honesty & moral grounding. Unlocks teachings on Dharma, Karma, and Satya.",
+  },
+  // 2. Compassion (Karuna)
+  {
+    id: 'karuna',
+    name: 'Mandala of Compassion (Karuna)',
+    imageId: 'mandala-karuna',
+    baseRings: 3,
+    segments: 8,
+    symbols: ['earth', 'water', 'earth', 'water', 'logo', 'earth', 'water', 'earth'],
+    description: "Theme: Empathy & kindness. Learn from the stories of Buddha and Hanuman's humility.",
+  },
+   // 3. Energy (Agni)
+  {
+    id: 'agni',
+    name: 'Mandala of Energy (Agni)',
     imageId: 'mandala-agni',
     baseRings: 3,
     segments: 8,
     symbols: ['fire', 'phoenix', 'fire', 'phoenix', 'logo', 'phoenix', 'fire', 'phoenix'],
-    description: "Explore the purifying power of the fire god, Agni.",
+    description: "Theme: Fire, transformation & effort. Learn about yajnas and purity.",
   },
+  // 4. Purity (Ganga)
   {
-    id: 'jala', // Water
-    name: 'Mandala of Jala',
-    imageId: 'mandala-jala',
-    baseRings: 3,
+    id: 'ganga',
+    name: 'Mandala of Purity (Ganga)',
+    imageId: 'mandala-ganga',
+    baseRings: 4,
     segments: 8,
-    symbols: ['water', 'garuda', 'water', 'garuda', 'logo', 'garuda', 'water', 'garuda'],
-    description: "Uncover the mysteries of the water element and its deities.",
+    symbols: ['water', 'lotus', 'water', 'lotus', 'logo', 'water', 'lotus', 'water'],
+    description: "Theme: Flow, clarity & cleansing. Discover the story of Ganga’s descent from heaven.",
   },
+   // 5. Devotion (Bhakti)
   {
-    id: 'prithvi', // Earth
-    name: 'Mandala of Prithvi',
-    imageId: 'mandala-prithvi',
-    baseRings: 3,
-    segments: 12,
-    symbols: ['earth', 'lotus', 'earth', 'lotus', 'earth', 'lotus', 'logo', 'lotus', 'earth', 'lotus', 'earth', 'lotus'],
-    description: "Connect with the stability and patience of the Earth Mother.",
+    id: 'bhakti',
+    name: 'Mandala of Devotion (Bhakti)',
+    imageId: 'mandala-bhakti',
+    baseRings: 4,
+    segments: 10,
+    symbols: ['lotus', 'trishul', 'lotus', 'trishul', 'logo', 'lotus', 'trishul', 'lotus', 'trishul', 'lotus'],
+    description: "Theme: Love, faith & surrender. Inspired by the stories of Mirabai and Prahlada.",
   },
+  // 6. Wisdom (Gyaan)
   {
-    id: 'vayu', // Air
-    name: 'Mandala of Vayu',
-    imageId: 'mandala-vayu',
+    id: 'gyaan',
+    name: 'Mandala of Wisdom (Gyaan)',
+    imageId: 'mandala-gyaan',
     baseRings: 4,
     segments: 12,
-    symbols: ['air', 'phoenix', 'air', 'garuda', 'air', 'logo', 'air', 'phoenix', 'air', 'garuda', 'air', 'logo'],
-    description: "Embrace the life-giving force of Vayu, the wind god.",
+    symbols: ['phoenix', 'garuda', 'phoenix', 'garuda', 'phoenix', 'garuda', 'logo', 'phoenix', 'garuda', 'phoenix', 'garuda', 'phoenix'],
+    description: "Theme: Knowledge, learning & curiosity. Ponder that knowledge gives humility.",
   },
+  // 7. Balance (Yoga)
   {
-    id: 'akasha', // Ether/Space
-    name: 'Mandala of Akasha',
-    imageId: 'mandala-akasha',
-    baseRings: 4,
-    segments: 12,
-    symbols: ['fire', 'water', 'earth', 'air', 'phoenix', 'garuda', 'logo', 'garuda', 'phoenix', 'air', 'earth', 'water'],
-    description: "Meditate on the endless expanse of space and consciousness.",
-  },
-  {
-    id: 'surya', // Sun
-    name: 'Mandala of Surya',
-    imageId: 'mandala-surya',
+    id: 'yoga',
+    name: 'Mandala of Balance (Yoga)',
+    imageId: 'mandala-yoga',
     baseRings: 5,
-    segments: 8,
-    symbols: ['fire', 'logo', 'fire', 'lotus', 'fire', 'logo', 'fire', 'lotus'],
-    description: "Bask in the radiant energy of Surya, the sun deity.",
-  },
-  {
-    id: 'chandra', // Moon
-    name: 'Mandala of Chandra',
-    imageId: 'mandala-chandra',
-    baseRings: 5,
-    segments: 8,
-    symbols: ['water', 'logo', 'water', 'lotus', 'water', 'logo', 'water', 'lotus'],
-    description: "Find tranquility in the cool, serene light of the Moon god.",
-  },
-  {
-    id: 'dharma', // Righteousness
-    name: 'Mandala of Dharma',
-    imageId: 'mandala-dharma',
-    baseRings: 6,
     segments: 12,
-    symbols: ['trishul', 'lotus', 'trishul', 'logo', 'trishul', 'lotus', 'trishul', 'logo', 'trishul', 'lotus', 'trishul', 'logo'],
-    description: "Follow the path of righteousness and cosmic order.",
+    symbols: ['fire', 'air', 'water', 'earth', 'fire', 'air', 'logo', 'water', 'earth', 'fire', 'air', 'water'],
+    description: "Theme: Mind-body harmony & focus. For symmetry-based pattern alignment.",
   },
+  // 8. Prosperity (Lakshmi)
   {
-    id: 'aranyani', // Goddess of Forests
-    name: 'Mandala of Aranyani',
-    imageId: 'mandala-aranyani',
-    baseRings: 4,
-    segments: 8,
-    symbols: ['earth', 'lotus', 'air', 'phoenix', 'logo', 'earth', 'lotus', 'air'],
-    description: "Discover the secrets of the elusive goddess of forests.",
-  },
-  {
-    id: 'soma', // Ritual Drink/Deity
-    name: 'Mandala of Soma',
-    imageId: 'mandala-soma',
+    id: 'lakshmi',
+    name: 'Mandala of Prosperity (Lakshmi)',
+    imageId: 'mandala-lakshmi',
     baseRings: 5,
     segments: 10,
-    symbols: ['water', 'lotus', 'water', 'logo', 'water', 'lotus', 'water', 'logo', 'water', 'lotus'],
-    description: "Learn of the celestial drink of the gods and its power.",
+    symbols: ['lotus', 'logo', 'lotus', 'logo', 'lotus', 'logo', 'lotus', 'logo', 'lotus', 'logo'],
+    description: "Theme: Gratitude, abundance, and the balance of effort and reward.",
   },
+  // 9. Courage (Veer)
   {
-    id: 'brahman', // The Ultimate Reality
-    name: 'Mandala of Brahman',
-    imageId: 'mandala-brahman',
+    id: 'veer',
+    name: 'Mandala of Courage (Veer)',
+    imageId: 'mandala-veer',
+    baseRings: 5,
+    segments: 12,
+    symbols: ['trishul', 'phoenix', 'trishul', 'phoenix', 'trishul', 'phoenix', 'logo', 'trishul', 'phoenix', 'trishul', 'phoenix', 'trishul'],
+    description: "Theme: Bravery & determination. Reflect on Arjuna’s dilemma and Hanuman’s leap.",
+  },
+  // 10. Nature (Prakriti)
+  {
+    id: 'prakriti',
+    name: 'Mandala of Nature (Prakriti)',
+    imageId: 'mandala-prakriti',
+    baseRings: 6,
+    segments: 12,
+    symbols: ['earth', 'air', 'water', 'earth', 'air', 'water', 'logo', 'earth', 'air', 'water', 'earth', 'air'],
+    description: "Theme: Harmony with the environment and the five elements.",
+  },
+  // 11. Light (Jyoti)
+  {
+    id: 'jyoti',
+    name: 'Mandala of Light (Jyoti)',
+    imageId: 'mandala-jyoti',
+    baseRings: 6,
+    segments: 8,
+    symbols: ['fire', 'logo', 'fire', 'logo', 'fire', 'logo', 'fire', 'logo'],
+    description: "Theme: Knowledge overcoming ignorance. From darkness, lead me to light.",
+  },
+  // 12. Liberation (Moksha)
+  {
+    id: 'moksha',
+    name: 'Mandala of Liberation (Moksha)',
+    imageId: 'mandala-moksha',
     baseRings: 7,
     segments: 12,
-    symbols: ['logo', 'fire', 'water', 'earth', 'air', 'lotus', 'trishul', 'phoenix', 'garuda', 'fire', 'water', 'earth'],
-    description: "Contemplate the nature of the ultimate, formless reality.",
-  }
+    symbols: ['fire', 'water', 'earth', 'air', 'lotus', 'trishul', 'logo', 'phoenix', 'garuda', 'fire', 'water', 'earth'],
+    description: "Theme: Ultimate realization and unity. I am Brahman.",
+  },
 ];
+
 
 export const TOTAL_LEVELS_PER_MANDALA = 9;
 
-// Player Titles based on total mandalas completed
-export const PLAYER_TITLES = {
-  NOVICE: 'Mandala Novice',
-  APPRENTICE: 'Dharma Apprentice',
-  SEEKER: 'Gita Seeker',
-  SCHOLAR: 'Vedic Scholar',
-  GUARDIAN: 'Brahman Guardian',
-  ENLIGHTENED: 'Enlightened Soul',
-};
+// Player Titles based on the number of MANDALAS completed.
+export const PLAYER_TITLES = [
+    { completed: 0, title: 'Mandala Novice' },
+    { completed: 1, title: 'Seeker of Truth' },
+    { completed: 2, title: 'Compassionate Soul' },
+    { completed: 3, title: 'Bearer of the Flame' },
+    { completed: 4, title: 'River of Purity' },
+    { completed: 5, title: 'Devoted Heart' },
+    { completed: 6, title: 'Gita Guardian' },
+    { completed: 7, title: 'Yogic Master' },
+    { completed: 8, title: 'Embodiment of Abundance' },
+    { completed: 9, title: 'Courageous Warrior' },
+    { completed: 10, title: 'Child of Nature' },
+    { completed: 11, title: 'Beacon of Light' },
+    { completed: 12, title: 'Enlightened Soul' }
+];
 
-// We now base titles on the number of MANDALAS completed (all 9 levels).
 export const getTitleByMandalasCompleted = (completedMandalas: number): string => {
-  if (completedMandalas >= 10) return PLAYER_TITLES.ENLIGHTENED;
-  if (completedMandalas >= 7) return PLAYER_TITLES.GUARDIAN;
-  if (completedMandalas >= 5) return PLAYER_TITLES.SCHOLAR;
-  if (completedMandalas >= 3) return PLAYER_TITLES.SEEKER;
-  if (completedMandalas >= 1) return PLAYER_TITLES.APPRENTICE;
-  return PLAYER_TITLES.NOVICE;
+  const foundTitle = PLAYER_TITLES.slice().reverse().find(t => completedMandalas >= t.completed);
+  return foundTitle ? foundTitle.title : PLAYER_TITLES[0].title;
 };

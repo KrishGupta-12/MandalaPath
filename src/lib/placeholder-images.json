@@ -7,70 +7,76 @@
       "imageHint": "hindu temple"
     },
     {
+      "id": "mandala-satya",
+      "description": "A scroll with Sanskrit text, representing truth and ancient wisdom.",
+      "imageUrl": "https://images.unsplash.com/photo-1621935348253-50ea3975727a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "ancient scroll"
+    },
+    {
+      "id": "mandala-karuna",
+      "description": "A serene Buddha statue's hands in a gesture of compassion.",
+      "imageUrl": "https://images.unsplash.com/photo-1605651202722-1ca4a44b36aa?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "buddha hands"
+    },
+    {
       "id": "mandala-agni",
-      "description": "A mandala representing the element of fire, with warm colors.",
+      "description": "A representation of fire with warm, glowing abstract patterns.",
       "imageUrl": "https://images.unsplash.com/photo-1620121684840-a43a6d639a73?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "fire mandala"
+      "imageHint": "fire abstract"
     },
     {
-      "id": "mandala-jala",
-      "description": "A mandala representing the element of water, with cool, flowing colors.",
-      "imageUrl": "https://images.unsplash.com/photo-1617957723996-568a2a53f9a7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "water mandala"
+      "id": "mandala-ganga",
+      "description": "The clear blue waters of a holy river flowing through mountains.",
+      "imageUrl": "https://images.unsplash.com/photo-1549887552-198a60dd5b0a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "holy river"
     },
     {
-      "id": "mandala-prithvi",
-      "description": "A mandala representing the element of earth, with grounded, stable patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1559251606-c620d2e5b39a?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "earth mandala"
+      "id": "mandala-bhakti",
+      "description": "A collection of glowing diyas (clay lamps) used in devotion.",
+      "imageUrl": "https://images.unsplash.com/photo-1600156898877-c376c6c5a538?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "glowing diyas"
     },
     {
-      "id": "mandala-vayu",
-      "description": "A mandala representing the element of air, with light, ethereal patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1500373994708-4d7814776162?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "air mandala"
+      "id": "mandala-gyaan",
+      "description": "An ancient, open book on a wooden table, representing knowledge.",
+      "imageUrl": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1973&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "ancient book"
     },
     {
-      "id": "mandala-akasha",
-      "description": "A mandala representing the element of ether/space, with cosmic patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "space mandala"
+      "id": "mandala-yoga",
+      "description": "A silhouette of a person meditating at sunrise, showing balance.",
+      "imageUrl": "https://images.unsplash.com/photo-1506126613408-444d89895914?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "meditation sunrise"
     },
     {
-      "id": "mandala-surya",
-      "description": "A mandala representing the Sun, with bright, radiating patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1599144365779-661f28bc89fa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "sun mandala"
+      "id": "mandala-lakshmi",
+      "description": "A golden lotus flower, symbolizing purity, prosperity, and divinity.",
+      "imageUrl": "https://images.unsplash.com/photo-1604213410393-8403334d5867?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "golden lotus"
     },
     {
-      "id": "mandala-chandra",
-      "description": "A mandala representing the Moon, with cool, serene patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1628726593125-50a98453d131?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "moon mandala"
+      "id": "mandala-veer",
+      "description": "A majestic silver sword with an ornate hilt, representing courage.",
+      "imageUrl": "https://images.unsplash.com/photo-1620027931388-dd5471b36da4?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "ornate sword"
     },
     {
-      "id": "mandala-dharma",
-      "description": "A representation of Dharma, showing cosmic balance and order.",
-      "imageUrl": "https://images.unsplash.com/photo-1599951883902-140b2a7e78e6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "righteousness balance"
-    },
-    {
-      "id": "mandala-aranyani",
-      "description": "An enchanting, dense forest representing the goddess Aranyani.",
+      "id": "mandala-prakriti",
+      "description": "A lush, green forest canopy viewed from below, representing nature.",
       "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "enchanted forest"
+      "imageHint": "forest canopy"
     },
     {
-      "id": "mandala-soma",
-      "description": "A mystical, glowing potion in a celestial chalice, representing Soma.",
-      "imageUrl": "https://images.unsplash.com/photo-1550422979-3a3f3a093758?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "glowing potion"
+      "id": "mandala-jyoti",
+      "description": "Beams of light shining through clouds, representing spiritual light.",
+      "imageUrl": "https://images.unsplash.com/photo-1505506263793-6e4b81883b32?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "light beams"
     },
     {
-      "id": "mandala-brahman",
-      "description": "An abstract representation of the cosmos and ultimate reality.",
+      "id": "mandala-moksha",
+      "description": "A vast, starry galaxy representing the cosmos and liberation.",
       "imageUrl": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1848&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "cosmos nebula"
+      "imageHint": "cosmos galaxy"
     },
     {
       "id": "user-avatar-1",
