@@ -137,9 +137,11 @@ export default function DashboardPage() {
               </CardHeader>
               <div className='p-4 flex flex-col flex-grow'>
                 <CardTitle className={cn("font-headline text-xl", isLocked ? "text-muted-foreground" : "text-primary")}>{mandala.name}</CardTitle>
-                <CardDescription className="mt-1 text-sm h-10">{mandala.description}</CardDescription>
+                <div className='bg-background/50 backdrop-blur-sm p-2 -mx-2 my-2 rounded-sm'>
+                  <CardDescription className="text-sm h-10 text-foreground/80">{mandala.description}</CardDescription>
+                </div>
                 
-                <div className='flex-grow mt-4'>
+                <div className='flex-grow mt-2'>
                   <Progress value={isCompleted ? 100 : progressPercentage} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-1">
                     {isCompleted ? 'Completed' : `Level ${currentLevel} / ${TOTAL_LEVELS_PER_MANDALA}`}
@@ -148,7 +150,7 @@ export default function DashboardPage() {
                 
                 <CardFooter className="p-0 pt-4">
                   <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold" disabled={isLocked}>
-                    <Link href={`/play?mandala=${mandala.id}`}>
+                    <Link href={isLocked ? '#' : `/play?mandala=${mandala.id}`} aria-disabled={isLocked} tabIndex={isLocked ? -1 : undefined} className={cn(isLocked && "pointer-events-none")}>
                       <Play className="mr-2 h-4 w-4" />
                       {isCompleted ? 'Play Again' : 'Play'}
                     </Link>
